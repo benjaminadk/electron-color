@@ -6,6 +6,8 @@ import Options from './Options'
 import ColorPicker from './ColorPicker'
 import SavedColors from './SavedColors'
 import Dropper from './Dropper'
+import fs from 'fs'
+import path from 'path'
 import rgbToHsl from 'rgb-to-hsl'
 
 const [screenWidth, screenHeight] = getScreen()
@@ -66,17 +68,20 @@ export default class App extends Component {
   }
 
   initSavedColors = () => {
-    let savedColors = localStorage.getItem('COLORS')
-    if (savedColors) {
-      let colors = JSON.parse(savedColors)
-      this.setState({ colors })
-    } else {
-      let colors = []
-      for (let i = 0; i < 64; i++) {
-        colors[i] = { color: 'transparent', clean: true, type: null }
+    var colors
+    fs.readFile(path.resolve(__static, 'colors.json'), (error, data) => {
+      if (error) throw error
+      if (!data.length) {
+        colors = []
+        for (let i = 0; i < 64; i++) {
+          colors[i] = { color: 'transparent', clean: true, type: null }
+        }
+        this.setState({ colors })
+      } else {
+        colors = JSON.parse(data)
+        this.setState({ colors })
       }
-      this.setState({ colors })
-    }
+    })
   }
 
   initDropper = () => {
@@ -110,8 +115,14 @@ export default class App extends Component {
     const { colors } = this.state
     let firstOpen = colors.findIndex(c => c.clean)
     colors[firstOpen] = { color, clean: false, type }
-    localStorage.setItem('COLORS', JSON.stringify(colors))
     this.setState({ colors })
+    fs.writeFile(
+      path.resolve(__static, 'colors.json'),
+      JSON.stringify(colors),
+      error => {
+        if (error) throw error
+      }
+    )
   }
 
   resetSavedColors = () => {

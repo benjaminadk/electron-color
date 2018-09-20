@@ -3,6 +3,7 @@ import ColorBar from './components/ColorPicker/ColorBar'
 import StatInput from './components/ColorPicker/StatInput'
 import MainSwatch from './components/ColorPicker/MainSwatch'
 import StatOutput from './components/ColorPicker/StatOutput'
+import MainActions from './components/ColorPicker/MainActions'
 import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
 
@@ -312,6 +313,11 @@ export default class ColorPicker extends Component {
             hexa={hexa}
           />
         </div>
+        <MainActions
+          addNewColor={this.addNewColor}
+          enterOptions={enterOptions}
+          resetSavedColors={resetSavedColors}
+        />
       </div>
     )
   }

@@ -18,6 +18,10 @@
       outline: $classic-border;
       box-shadow: $saved-color-swatch-shadow;
       cursor: pointer;
+
+      &:hover {
+        outline: $hover-border;
+      }
     }
   }
 }
