@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import 'variables';
+@import 'ColorPicker';
+@import 'Options';
+@import 'SavedColors';
+@import 'Dropper';
+
+* {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.Main {
+  display: flex;
+  justify-content: space-between;
+}

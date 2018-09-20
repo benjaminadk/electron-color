@@ -1,0 +1,19 @@
+.Options {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+
+  .middle {
+    margin-left: 20px;
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: flex-start;
+
+    .button {
+      margin-left: 10px;
+    }
+  }
+}

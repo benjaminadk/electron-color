@@ -1,0 +1,18 @@
+$classic-border: 1px outset rgb(206, 206, 206);
+$color-bar-width: 360px;
+$color-bar-height: 16px;
+$vertical-spacing: 15px;
+$main-swatch-width: 150px;
+$main-swatch-height: $main-swatch-width / 2;
+$detail-font-size: 0.75rem;
+$detail-font-padding: 0.75px;
+
+$dropper-window-width: 135px;
+$dropper-window-height: 250px;
+$dropper-canvas-width: 100px;
+$dropper-canvas-height: 100px;
+
+$saved-color-length: 240px;
+$saved-color-swatch-length: $saved-color-length * 0.125;
+$saved-color-inner-swatch: 75%;
+$saved-color-swatch-shadow: 1px 1px lightgray;

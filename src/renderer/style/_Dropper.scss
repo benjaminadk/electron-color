@@ -1,0 +1,80 @@
+.Dropper {
+  overflow: hidden;
+  cursor: crosshair;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+
+  .drop-window {
+    width: $dropper-window-width;
+    height: $dropper-window-height;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 10px 0 0;
+    background: white;
+    outline: 1px solid black;
+
+    .drop-controls {
+      width: $dropper-window-width;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 2.5px;
+    }
+
+    .drop-canvas-wrapper {
+      width: $dropper-window-width;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .canvas-stack-row {
+        width: $dropper-window-width;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .canvas-stack {
+          position: relative;
+          width: $dropper-canvas-width;
+          height: $dropper-canvas-height;
+          border: 1px solid;
+
+          #c1 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+          }
+
+          #c2 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2;
+          }
+
+          #top-layer {
+            width: $dropper-canvas-width;
+            height: $dropper-canvas-height;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 3;
+          }
+        }
+      }
+    }
+
+    .drop-swatch {
+      width: $dropper-canvas-width;
+      height: $dropper-canvas-height * 0.35;
+      border: 1px solid;
+      margin-bottom: 7.5px;
+    }
+  }
+}

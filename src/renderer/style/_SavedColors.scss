@@ -1,0 +1,23 @@
+.SavedColors {
+  width: $saved-color-length;
+  height: $saved-color-length;
+  display: flex;
+  flex-wrap: wrap;
+  margin: $vertical-spacing 20px 0 0;
+
+  .outerSwatch {
+    width: $saved-color-swatch-length;
+    height: $saved-color-swatch-length;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .innerSwatch {
+      width: $saved-color-inner-swatch;
+      height: $saved-color-inner-swatch;
+      outline: $classic-border;
+      box-shadow: $saved-color-swatch-shadow;
+      cursor: pointer;
+    }
+  }
+}

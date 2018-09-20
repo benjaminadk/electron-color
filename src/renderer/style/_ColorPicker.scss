@@ -1,0 +1,94 @@
+.ColorPicker {
+  margin-left: 20px;
+
+  .bar {
+    width: $color-bar-width;
+    height: $color-bar-height;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: $vertical-spacing;
+    cursor: pointer;
+    border: $classic-border;
+
+    .thumb {
+      width: $color-bar-height - 2;
+      height: $color-bar-height - 2;
+      position: absolute;
+      background-color: white;
+      border: $classic-border;
+      border-radius: 50%;
+    }
+  }
+
+  .stats {
+    width: $color-bar-width;
+    display: flex;
+    justify-content: space-around;
+    margin-top: $vertical-spacing;
+
+    .stat-input {
+      display: flex;
+      align-items: center;
+
+      .stat-label {
+        font-size: $detail-font-size;
+      }
+
+      input {
+        outline: none;
+        width: 25px;
+        font-size: $detail-font-size;
+        padding: $detail-font-padding;
+        margin: auto 2px auto 3px;
+        text-align: center;
+      }
+    }
+  }
+
+  .output {
+    width: $color-bar-width;
+    display: flex;
+    justify-content: space-between;
+    margin-top: $vertical-spacing;
+
+    .main-swatch {
+      width: $main-swatch-width;
+      height: $main-swatch-height;
+      border: $classic-border;
+      display: flex;
+
+      .hsl {
+        width: $main-swatch-width / 2;
+        height: $main-swatch-height;
+      }
+
+      .hsla {
+        width: $main-swatch-width / 2;
+        height: $main-swatch-height;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+          font-size: $detail-font-size;
+          z-index: -1;
+        }
+      }
+    }
+
+    .formats {
+      height: $main-swatch-height;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      input {
+        width: $main-swatch-width;
+        padding: $detail-font-padding;
+        font-size: $detail-font-size;
+        text-align: center;
+      }
+    }
+  }
+}
