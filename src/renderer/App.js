@@ -112,9 +112,11 @@ export default class App extends Component {
 
   addNewColor = (color, type) => {
     const { colors } = this.state
+    let newColor = { color, clean: false, type }
     let firstOpen = colors.findIndex(c => c.clean)
-    colors[firstOpen] = { color, clean: false, type }
+    colors[firstOpen] = newColor
     this.setState({ colors })
+    this.handleSwatchClick(newColor)
     fs.writeFile(
       path.resolve(__static, 'colors.json'),
       JSON.stringify(colors),

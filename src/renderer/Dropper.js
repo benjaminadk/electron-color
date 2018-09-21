@@ -169,7 +169,7 @@ export default class Dropper extends Component {
   shiftCanvasRight = () => {
     const { x, y } = this.state
     const { width } = this.props
-    if (x === width) return
+    if (x === width - 10) return
     let imageData = this.ctx0.getImageData(x + 1, y, 10, 10)
     this.ctx3.putImageData(imageData, 0, 0)
     this.ctx1.drawImage(this.c3, 0, 0)
@@ -190,7 +190,7 @@ export default class Dropper extends Component {
   shiftCanvasDown = () => {
     const { x, y } = this.state
     const { height } = this.props
-    if (y === height) return
+    if (y === height - 10) return
     let imageData = this.ctx0.getImageData(x, y + 1, 10, 10)
     this.ctx3.putImageData(imageData, 0, 0)
     this.ctx1.drawImage(this.c3, 0, 0)
@@ -282,6 +282,9 @@ export default class Dropper extends Component {
             shiftCanvasDown={this.shiftCanvasDown}
             shiftCanvasLeft={this.shiftCanvasLeft}
           />
+          <div>
+            {this.state.x}, {this.state.y}
+          </div>
           <ColorOutput color={color} />
         </div>
       </div>
