@@ -4,6 +4,7 @@ import installExtension, {
 } from 'electron-devtools-installer'
 import getMainWinDimens from 'common/getMainWinDimens'
 import { MAIN_HTML } from 'common/html'
+import { MAIN_ICON } from 'common/icon'
 
 let mainWin
 
@@ -18,7 +19,9 @@ function createMainWindow() {
     x,
     y,
     resizable: false,
-    maximizable: false
+    maximizable: false,
+    icon: MAIN_ICON,
+    title: 'HSL Color Picker'
   })
 
   inDev && setupDevtools()

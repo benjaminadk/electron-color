@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { remote, ipcRenderer } from 'electron'
 import getScreen from 'common/getScreen'
+import getMainWinDimens from 'common/getMainWinDimens'
 import { MAIN_HTML } from 'common/html'
 import Options from './Options'
 import ColorPicker from './ColorPicker'
@@ -10,6 +11,7 @@ import path from 'path'
 import rgbToHsl from 'rgb-to-hsl'
 
 const [screenWidth, screenHeight] = getScreen()
+const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 var mainWin = remote.BrowserWindow.fromId(1)
 var dropperWin
 
@@ -26,7 +28,8 @@ export default class App extends Component {
       colors: null,
       optionsMode: false,
       options: {
-        alpha: false
+        alpha: false,
+        pinned: false
       }
     }
   }
@@ -49,17 +52,14 @@ export default class App extends Component {
         {
           label: 'File',
           submenu: [
-            {
-              label: 'Options',
-              click: () => this.enterOptions()
-            },
+            { label: 'Options', click: () => this.enterOptions() },
             { type: 'separator' },
             { role: 'quit' }
           ]
         },
         {
           label: 'Dropper',
-          click: () => this.initDropper()
+          submenu: [{ label: 'Open', click: () => this.initDropper() }]
         }
       ]
       mainWin.setMenu(remote.Menu.buildFromTemplate(template))
@@ -180,7 +180,7 @@ export default class App extends Component {
         )
       }
       return (
-        <div style={{ height: screenHeight - 35 }}>
+        <div style={{ height: mainHeight, marginTop: '10px' }}>
           <ColorPicker
             h={h}
             s={s}

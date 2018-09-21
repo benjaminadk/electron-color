@@ -282,9 +282,6 @@ export default class Dropper extends Component {
             shiftCanvasDown={this.shiftCanvasDown}
             shiftCanvasLeft={this.shiftCanvasLeft}
           />
-          <div>
-            {this.state.x}, {this.state.y}
-          </div>
           <ColorOutput color={color} />
         </div>
       </div>

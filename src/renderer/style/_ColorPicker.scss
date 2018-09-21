@@ -31,6 +31,7 @@
     display: flex;
     justify-content: space-around;
     margin-top: $vertical-spacing;
+    user-select: none;
 
     .stat-input {
       display: flex;
@@ -47,6 +48,10 @@
         padding: $detail-font-padding;
         margin: auto 2px auto 3px;
         text-align: center;
+
+        &::selection {
+          background: none;
+        }
       }
     }
   }
@@ -94,6 +99,10 @@
         margin-right: 5px;
         font-size: $detail-font-size;
         text-align: center;
+
+        &::selection {
+          background: none;
+        }
       }
     }
   }
@@ -101,6 +110,6 @@
   .actions {
     display: flex;
     justify-content: space-between;
-    margin: $vertical-spacing 20px 0 0;
+    margin: 30px 20px 0 0;
   }
 }
