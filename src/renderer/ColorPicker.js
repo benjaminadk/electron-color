@@ -7,6 +7,7 @@ import SavedColors from './components/ColorPicker/SavedColors'
 import MainActions from './components/ColorPicker/MainActions'
 import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
+import copyToClipboard from './utils/copyToClipboard'
 
 const BAR_HEIGHT = 16
 const BAR_WIDTH = 360
@@ -25,7 +26,8 @@ export default class ColorPicker extends Component {
       lit: 50,
       litLeft: 172,
       opa: 100,
-      opaLeft: 352
+      opaLeft: 352,
+      copied: null
     }
 
     this.hue = React.createRef()
@@ -224,6 +226,12 @@ export default class ColorPicker extends Component {
     this.props.addNewColor(color, 'hsl')
   }
 
+  copyToClipboard = (text, i) => {
+    copyToClipboard(text)
+    this.setState({ copied: i })
+    setTimeout(() => this.setState({ copied: null }), 3000)
+  }
+
   render() {
     const {
       hue,
@@ -233,7 +241,8 @@ export default class ColorPicker extends Component {
       lit,
       litLeft,
       opa,
-      opaLeft
+      opaLeft,
+      copied
     } = this.state
     const {
       colors,
@@ -309,6 +318,7 @@ export default class ColorPicker extends Component {
             <div className="output">
               <MainSwatch alpha={alpha} hsl={hsl} hsla={hsla} />
               <StatOutput
+                copied={copied}
                 alpha={alpha}
                 hsl={hsl}
                 hsla={hsla}
@@ -316,6 +326,7 @@ export default class ColorPicker extends Component {
                 rgba={rgba}
                 hex={hex}
                 hexa={hexa}
+                copyToClipboard={this.copyToClipboard}
               />
             </div>
           </div>

@@ -41,3 +41,5 @@ function setupDevtools() {
 }
 
 app.on('ready', createMainWindow)
+
+app.on('window-all-closed', () => app.quit())
