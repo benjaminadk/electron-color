@@ -1,6 +1,11 @@
 .ColorPicker {
   margin-left: 20px;
 
+  .cp-upper {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .bar {
     width: $color-bar-width;
     height: $color-bar-height;
@@ -86,6 +91,7 @@
       input {
         width: $main-swatch-width;
         padding: $detail-font-padding;
+        margin-right: 5px;
         font-size: $detail-font-size;
         text-align: center;
       }
@@ -93,6 +99,8 @@
   }
 
   .actions {
-    margin-top: $vertical-spacing;
+    display: flex;
+    justify-content: space-between;
+    margin: $vertical-spacing 20px 0 0;
   }
 }

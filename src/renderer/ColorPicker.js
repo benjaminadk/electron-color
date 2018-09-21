@@ -3,6 +3,7 @@ import ColorBar from './components/ColorPicker/ColorBar'
 import StatInput from './components/ColorPicker/StatInput'
 import MainSwatch from './components/ColorPicker/MainSwatch'
 import StatOutput from './components/ColorPicker/StatOutput'
+import SavedColors from './components/ColorPicker/SavedColors'
 import MainActions from './components/ColorPicker/MainActions'
 import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
@@ -235,7 +236,9 @@ export default class ColorPicker extends Component {
       opaLeft
     } = this.state
     const {
+      colors,
       options: { alpha },
+      handleSwatchClick,
       enterOptions,
       resetSavedColors
     } = this.props
@@ -247,71 +250,76 @@ export default class ColorPicker extends Component {
     const hexa = HSLAtoRGBAorHEXA(hue, sat, lit, opa, false)
     return (
       <div className="ColorPicker">
-        <ColorBar
-          barRef={this.hue}
-          thumbRef={this.hueThumb}
-          title="Hue"
-          left={hueLeft}
-        />
-        <ColorBar
-          barRef={this.sat}
-          thumbRef={this.satThumb}
-          title="Saturation"
-          left={satLeft}
-        />
-        <ColorBar
-          barRef={this.lit}
-          thumbRef={this.litThumb}
-          title="Lightness"
-          left={litLeft}
-        />
-        <ColorBar
-          barRef={this.opa}
-          thumbRef={this.opaThumb}
-          title="Alpha"
-          left={opaLeft}
-        />
-        <div className="stats">
-          <StatInput
-            type="hue"
-            value={hue}
-            onChange={this.onChange}
-            before="H"
-            after="&deg;"
-          />
-          <StatInput
-            type="sat"
-            value={sat}
-            onChange={this.onChange}
-            before="S"
-            after="%"
-          />
-          <StatInput
-            type="lit"
-            value={lit}
-            onChange={this.onChange}
-            before="L"
-            after="%"
-          />
-          <StatInput
-            type="opa"
-            value={opa}
-            onChange={this.onChange}
-            before="A"
-            after="%"
-          />
-        </div>
-        <div className="output">
-          <MainSwatch alpha={alpha} hsl={hsl} hsla={hsla} />
-          <StatOutput
-            alpha={alpha}
-            hsl={hsl}
-            hsla={hsla}
-            rgb={rgb}
-            rgba={rgba}
-            hex={hex}
-            hexa={hexa}
-          />
+        <div className="cp-upper">
+          <div>
+            <ColorBar
+              barRef={this.hue}
+              thumbRef={this.hueThumb}
+              title="Hue"
+              left={hueLeft}
+            />
+            <ColorBar
+              barRef={this.sat}
+              thumbRef={this.satThumb}
+              title="Saturation"
+              left={satLeft}
+            />
+            <ColorBar
+              barRef={this.lit}
+              thumbRef={this.litThumb}
+              title="Lightness"
+              left={litLeft}
+            />
+            <ColorBar
+              barRef={this.opa}
+              thumbRef={this.opaThumb}
+              title="Alpha"
+              left={opaLeft}
+            />
+            <div className="stats">
+              <StatInput
+                type="hue"
+                value={hue}
+                onChange={this.onChange}
+                before="H"
+                after="&deg;"
+              />
+              <StatInput
+                type="sat"
+                value={sat}
+                onChange={this.onChange}
+                before="S"
+                after="%"
+              />
+              <StatInput
+                type="lit"
+                value={lit}
+                onChange={this.onChange}
+                before="L"
+                after="%"
+              />
+              <StatInput
+                type="opa"
+                value={opa}
+                onChange={this.onChange}
+                before="A"
+                after="%"
+              />
+            </div>
+            <div className="output">
+              <MainSwatch alpha={alpha} hsl={hsl} hsla={hsla} />
+              <StatOutput
+                alpha={alpha}
+                hsl={hsl}
+                hsla={hsla}
+                rgb={rgb}
+                rgba={rgba}
+                hex={hex}
+                hexa={hexa}
+              />
+            </div>
+          </div>
+          <SavedColors colors={colors} handleSwatchClick={handleSwatchClick} />
         </div>
         <MainActions
           addNewColor={this.addNewColor}

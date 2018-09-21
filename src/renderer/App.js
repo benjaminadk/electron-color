@@ -4,7 +4,6 @@ import getScreen from 'common/getScreen'
 import { MAIN_HTML } from 'common/html'
 import Options from './Options'
 import ColorPicker from './ColorPicker'
-import SavedColors from './SavedColors'
 import Dropper from './Dropper'
 import fs from 'fs'
 import path from 'path'
@@ -126,7 +125,7 @@ export default class App extends Component {
   }
 
   resetSavedColors = () => {
-    let userInput = confirm('Delete ALL saved colors?')
+    let userInput = confirm(`Discard ALL Saved Colors? This CANNOT be undone!`)
     if (userInput) {
       localStorage.removeItem('COLORS')
       this.initSavedColors()
@@ -179,20 +178,18 @@ export default class App extends Component {
         )
       }
       return (
-        <div className="Main" style={{ height: screenHeight - 35 }}>
+        <div style={{ height: screenHeight - 35 }}>
           <ColorPicker
             h={h}
             s={s}
             l={l}
             a={a}
             options={options}
+            colors={colors}
+            handleSwatchClick={this.handleSwatchClick}
             addNewColor={this.addNewColor}
             enterOptions={this.enterOptions}
             resetSavedColors={this.resetSavedColors}
-          />
-          <SavedColors
-            colors={colors}
-            handleSwatchClick={this.handleSwatchClick}
           />
         </div>
       )

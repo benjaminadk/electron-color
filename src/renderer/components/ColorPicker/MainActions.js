@@ -29,6 +29,15 @@ function MainAction({ addNewColor, enterOptions, resetSavedColors, classes }) {
       >
         Save Color
       </Button>
+      <Button
+        variant="contained"
+        onClick={resetSavedColors}
+        disableRipple
+        disableFocusRipple
+        classes={{ root: classes.button }}
+      >
+        Discard Saved Colors
+      </Button>
     </div>
   )
 }
