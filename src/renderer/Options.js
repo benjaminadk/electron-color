@@ -7,9 +7,55 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
 const styles = theme => ({
-  switch: {},
-  switchBase: {
-    height: 24
+  control: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '50%'
+  },
+  iOSSwitchBase: {
+    height: 30,
+    '&$iOSChecked': {
+      color: theme.palette.common.white,
+      '& + $iOSBar': {
+        backgroundColor: theme.palette.primary.dark
+      }
+    },
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+      easing: theme.transitions.easing.sharp
+    })
+  },
+  iOSChecked: {
+    transform: 'translateX(21px)',
+    '& + $iOSBar': {
+      opacity: 1,
+      border: `1px solid ${theme.palette.primary.dark}`
+    }
+  },
+  iOSBar: {
+    borderRadius: 13,
+    width: 40,
+    height: 18,
+    marginTop: -10,
+    marginLeft: -18,
+    border: `1px solid ${theme.palette.grey[300]}`,
+    backgroundColor: theme.palette.grey[200],
+    opacity: 1,
+    transition: theme.transitions.create(['background-color', 'border']),
+    '&:before': {
+      content: '"ON"',
+      display: 'inline-block',
+      fontSize: '.6rem',
+      color: theme.palette.common.white,
+      transform: 'translate(5px,-2.5px)'
+    }
+  },
+  iOSIcon: {
+    width: 18,
+    height: 18
+  },
+  iOSIconChecked: {
+    boxShadow: theme.shadows[1]
   }
 })
 
@@ -19,13 +65,14 @@ class Options extends Component {
 
     this.state = {
       alpha: false,
-      pinned: false
+      pinned: false,
+      outlineColor: '#FF0000'
     }
   }
 
   componentWillMount() {
-    let { alpha, pinned } = this.props.options
-    this.setState({ alpha, pinned })
+    let { alpha, pinned, outlineColor } = this.props.options
+    this.setState({ alpha, pinned, outlineColor })
   }
 
   onAlphaChange = (e, alpha) => this.setState({ alpha })
@@ -39,20 +86,22 @@ class Options extends Component {
   saveOptions = () => {
     let options = {
       alpha: this.state.alpha,
-      pinned: this.state.pinned
+      pinned: this.state.pinned,
+      outlineColor: this.state.outlineColor
     }
     this.props.saveOptions(options)
     this.props.exitOptions()
   }
 
   render() {
-    const { alpha, pinned } = this.state
+    const { alpha, pinned, outlineColor } = this.state
     const { exitOptions, classes } = this.props
     return (
       <div className="Options">
         <Typography variant="title">Options</Typography>
         <div className="middle">
           <FormControlLabel
+            classes={{ root: classes.control }}
             label={
               <Typography variant="caption">
                 Add Alpha To Color Selection
@@ -66,13 +115,17 @@ class Options extends Component {
                 onChange={this.onAlphaChange}
                 disableRipple
                 classes={{
-                  root: classes.switch,
-                  switchBase: classes.switchBase
+                  switchBase: classes.iOSSwitchBase,
+                  bar: classes.iOSBar,
+                  icon: classes.iOSIcon,
+                  iconChecked: classes.iOSIconChecked,
+                  checked: classes.iOSChecked
                 }}
               />
             }
           />
           <FormControlLabel
+            classes={{ root: classes.control }}
             label={
               <Typography variant="caption">
                 Color Picker Always On Top
@@ -85,7 +138,13 @@ class Options extends Component {
                 color="primary"
                 onChange={this.onPinnedChange}
                 disableRipple
-                classes={{ switchBase: classes.switchBase }}
+                classes={{
+                  switchBase: classes.iOSSwitchBase,
+                  bar: classes.iOSBar,
+                  icon: classes.iOSIcon,
+                  iconChecked: classes.iOSIconChecked,
+                  checked: classes.iOSChecked
+                }}
               />
             }
           />

@@ -254,7 +254,11 @@ export default class Dropper extends Component {
   }
 
   render() {
-    const { width, height } = this.props
+    const {
+      width,
+      height,
+      options: { outlineColor }
+    } = this.props
     const { color, boxIndex } = this.state
     return (
       <div
@@ -274,6 +278,7 @@ export default class Dropper extends Component {
             c2Ref={this.c2}
             topLayerRef={this.topLayer}
             boxIndex={boxIndex}
+            outlineColor={outlineColor}
             width={CANVAS_WIDTH}
             height={CANVAS_HEIGHT}
             setBoxIndex={this.setBoxIndex}

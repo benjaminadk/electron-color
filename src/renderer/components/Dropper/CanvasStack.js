@@ -25,6 +25,7 @@ function CanvasStack({
   c2Ref,
   topLayerRef,
   boxIndex,
+  outlineColor,
   width,
   height,
   setBoxIndex,
@@ -60,6 +61,7 @@ function CanvasStack({
                 key={`box-${i}`}
                 index={i}
                 selectedIndex={boxIndex}
+                outlineColor={outlineColor}
                 onClick={() => setBoxIndex(i)}
               />
             ))}

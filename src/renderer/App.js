@@ -29,7 +29,8 @@ export default class App extends Component {
       optionsMode: false,
       options: {
         alpha: false,
-        pinned: false
+        pinned: false,
+        outlineColor: '#FF0000'
       }
     }
   }
@@ -38,6 +39,7 @@ export default class App extends Component {
     this.setWindowId()
     this.setMainMenu()
     this.initSavedColors()
+    this.initOptions()
   }
 
   setWindowId = () => {
@@ -79,6 +81,20 @@ export default class App extends Component {
       } else {
         colors = JSON.parse(data)
         this.setState({ colors })
+      }
+    })
+  }
+
+  initOptions = () => {
+    var options
+    fs.readFile(path.resolve(__static, 'options.json'), (error, data) => {
+      if (error) throw error
+      if (!data.length) {
+        return
+      } else {
+        options = JSON.parse(data)
+        options.pinned && mainWin.setAlwaysOnTop(true)
+        this.setState({ options })
       }
     })
   }
@@ -134,7 +150,16 @@ export default class App extends Component {
     }
   }
 
-  saveOptions = options => this.setState({ options })
+  saveOptions = options => {
+    this.setState({ options })
+    fs.writeFile(
+      path.resolve(__static, 'options.json'),
+      JSON.stringify(options),
+      error => {
+        if (error) throw error
+      }
+    )
+  }
 
   exitOptions = () => this.setState({ optionsMode: false })
 
@@ -196,7 +221,9 @@ export default class App extends Component {
         </div>
       )
     } else {
-      return <Dropper width={screenWidth} height={screenHeight} />
+      return (
+        <Dropper width={screenWidth} height={screenHeight} options={options} />
+      )
     }
   }
 }
