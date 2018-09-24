@@ -3,7 +3,7 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS
 } from 'electron-devtools-installer'
 import getMainWinDimens from 'common/getMainWinDimens'
-import { MAIN_HTML } from 'common/html'
+import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
 import { MAIN_ICON } from 'common/icon'
 
 let mainWin
@@ -24,9 +24,9 @@ function createMainWindow() {
     title: 'HSL Color Picker'
   })
 
-  inDev && setupDevtools()
+  setupDevtools()
 
-  mainWin.loadURL(MAIN_HTML)
+  mainWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
 
   mainWin.setMenu(null)
 
@@ -36,6 +36,7 @@ function createMainWindow() {
 }
 
 function setupDevtools() {
+  //if (!inDev) return
   mainWin.webContents.openDevTools({ mode: 'detach' })
 
   installExtension(REACT_DEVELOPER_TOOLS)

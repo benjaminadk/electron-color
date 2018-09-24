@@ -1,18 +1,33 @@
 {
   "name": "electron-picker-2",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An HSL color picker and eye dropper application",
+  "main": "./dist/main/main.js",
   "scripts": {
-    "start": "electron-webpack dev"
+    "dev": "electron-webpack dev",
+    "prod": "electron ./dist/main/main.js",
+    "compile": "electron-webpack",
+    "dist": "electron-builder"
   },
   "keywords": [],
-  "author": "",
+  "author": "benjaminadk",
   "license": "ISC",
+  "build": {
+    "appId": "com.electron.hslpicker",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "directories": {
+      "output": "release"
+    }
+  },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "electron": "^3.0.0",
+    "electron-builder": "^20.28.4",
     "electron-devtools-installer": "^2.2.4",
     "electron-webpack": "^2.3.1",
     "node-sass": "^4.9.3",

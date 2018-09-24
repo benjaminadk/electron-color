@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { remote, ipcRenderer } from 'electron'
 import getScreen from 'common/getScreen'
 import getMainWinDimens from 'common/getMainWinDimens'
-import { MAIN_HTML } from 'common/html'
+import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
 import Options from './Options'
 import ColorPicker from './ColorPicker'
 import Dropper from './Dropper'
@@ -10,6 +10,7 @@ import fs from 'fs'
 import path from 'path'
 import rgbToHsl from 'rgb-to-hsl'
 
+const inDev = process.env.NODE_ENV === 'development'
 const [screenWidth, screenHeight] = getScreen()
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 var mainWin = remote.BrowserWindow.fromId(1)
@@ -117,7 +118,7 @@ export default class App extends Component {
 
     //dropperWin.webContents.openDevTools({ mode: 'bottom' })
 
-    dropperWin.loadURL(MAIN_HTML)
+    dropperWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
 
     dropperWin.on('close', () => {
       dropperWin = null
