@@ -252,7 +252,7 @@ export default class ColorPicker extends Component {
       resetSavedColors
     } = this.props
     const hsl = `hsl(${hue}, ${sat}%, ${lit}%)`
-    const hsla = `hsla(${hue}, ${sat}%, ${lit}%, ${opa * 0.01})`
+    const hsla = `hsla(${hue}, ${sat}%, ${lit}%, ${(opa * 0.01).toFixed(2)})`
     const rgb = HSLtoRGBorHEX(hue, sat, lit, true)
     const rgba = HSLAtoRGBAorHEXA(hue, sat, lit, opa, true)
     const hex = HSLtoRGBorHEX(hue, sat, lit, false)

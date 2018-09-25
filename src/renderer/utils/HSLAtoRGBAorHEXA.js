@@ -34,7 +34,7 @@ export default function(h, s, l, a, rgb) {
   let alpha = a * 0.01
 
   return rgb
-    ? `rgba(${red}, ${green}, ${blue}, ${alpha})`
+    ? `rgba(${red}, ${green}, ${blue}, ${alpha.toFixed(2)})`
     : `#${toHex(red)}${toHex(green)}${toHex(blue)}${toHex(
         Math.round(alpha * 255)
       )}`
