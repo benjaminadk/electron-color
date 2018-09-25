@@ -6,7 +6,7 @@ export const MAIN_HTML_DEV = `http://localhost:${
 }`
 
 export const MAIN_HTML_PROD = url.format({
-  pathname: path.resolve(__dirname, '../', 'renderer', 'index.html'),
+  pathname: path.resolve(__dirname, 'index.html'),
   protocol: 'file',
   slashes: true
 })

@@ -71,7 +71,8 @@ export default class App extends Component {
 
   initSavedColors = () => {
     var colors
-    fs.readFile(path.resolve(__static, 'colors.json'), (error, data) => {
+    var filepath = path.resolve(__static, 'colors.json')
+    fs.readFile(filepath, (error, data) => {
       if (error) throw error
       if (!data.length) {
         colors = []
@@ -79,6 +80,9 @@ export default class App extends Component {
           colors[i] = { color: 'transparent', clean: true, type: null }
         }
         this.setState({ colors })
+        fs.writeFile(filepath, JSON.stringify(colors), error => {
+          if (error) throw error
+        })
       } else {
         colors = JSON.parse(data)
         this.setState({ colors })
@@ -146,7 +150,6 @@ export default class App extends Component {
   resetSavedColors = () => {
     let userInput = confirm(`Discard ALL Saved Colors? This CANNOT be undone!`)
     if (userInput) {
-      localStorage.removeItem('COLORS')
       this.initSavedColors()
     }
   }

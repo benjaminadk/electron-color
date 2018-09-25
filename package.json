@@ -7,14 +7,17 @@
     "dev": "electron-webpack dev",
     "prod": "electron ./dist/main/main.js",
     "compile": "electron-webpack",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist:log": "SET DEBUG=electron-builder && electron-builder"
   },
   "keywords": [],
   "author": "benjaminadk",
   "license": "ISC",
   "build": {
     "appId": "com.electron.hslpicker",
+    "productName": "HSL Color Picker",
     "win": {
+      "icon": "static/picker-icon.ico",
       "target": [
         "nsis"
       ]
@@ -28,7 +31,6 @@
     "@babel/preset-react": "^7.0.0",
     "electron": "^3.0.0",
     "electron-builder": "^20.28.4",
-    "electron-devtools-installer": "^2.2.4",
     "electron-webpack": "^2.3.1",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
@@ -37,6 +39,7 @@
   "dependencies": {
     "@material-ui/core": "^3.1.0",
     "@material-ui/icons": "^3.0.1",
+    "electron-devtools-installer": "^2.2.4",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "rgb-to-hsl": "0.0.3"
