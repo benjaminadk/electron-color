@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Collapse from '@material-ui/core/Collapse'
 import ColorBar from './components/ColorPicker/ColorBar'
 import StatInput from './components/ColorPicker/StatInput'
 import MainSwatch from './components/ColorPicker/MainSwatch'
@@ -14,7 +16,13 @@ const BAR_WIDTH = 360
 const HUE_WIDTH = 1
 const SLICE_WIDTH = 3.6
 
-export default class ColorPicker extends Component {
+const styles = theme => ({
+  collapse: {
+    overflow: 'visible'
+  }
+})
+
+class ColorPicker extends Component {
   constructor(props) {
     super(props)
 
@@ -249,7 +257,8 @@ export default class ColorPicker extends Component {
       options: { alpha },
       handleSwatchClick,
       enterOptions,
-      resetSavedColors
+      resetSavedColors,
+      classes
     } = this.props
     const hsl = `hsl(${hue}, ${sat}%, ${lit}%)`
     const hsla = `hsla(${hue}, ${sat}%, ${lit}%, ${(opa * 0.01).toFixed(2)})`
@@ -279,12 +288,16 @@ export default class ColorPicker extends Component {
               title="Lightness"
               left={litLeft}
             />
-            <ColorBar
-              barRef={this.opa}
-              thumbRef={this.opaThumb}
-              title="Alpha"
-              left={opaLeft}
-            />
+            <Collapse in={alpha} classes={{ entered: classes.collapse }}>
+              <div>
+                <ColorBar
+                  barRef={this.opa}
+                  thumbRef={this.opaThumb}
+                  title="Alpha"
+                  left={opaLeft}
+                />
+              </div>
+            </Collapse>
             <div className="stats">
               <StatInput
                 type="hue"
@@ -341,3 +354,5 @@ export default class ColorPicker extends Component {
     )
   }
 }
+
+export default withStyles(styles)(ColorPicker)
