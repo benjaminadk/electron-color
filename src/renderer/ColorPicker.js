@@ -298,7 +298,7 @@ class ColorPicker extends Component {
                 />
               </div>
             </Collapse>
-            <div className="stats">
+            <div className="stats" style={{ marginTop: !alpha ? 40 : 10 }}>
               <StatInput
                 type="hue"
                 value={hue}

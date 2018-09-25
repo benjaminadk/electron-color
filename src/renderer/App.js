@@ -3,7 +3,9 @@ import { remote, ipcRenderer } from 'electron'
 import getScreen from 'common/getScreen'
 import getMainWinDimens from 'common/getMainWinDimens'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
-import Options from './Options'
+import Options from './components/App/Options'
+import Palettes from './components/App/Palettes'
+import PalettePrompt from './components/App/PalettePrompt'
 import ColorPicker from './ColorPicker'
 import Dropper from './Dropper'
 import fs from 'fs'
@@ -28,11 +30,10 @@ export default class App extends Component {
       a: null,
       colors: null,
       optionsMode: false,
-      options: {
-        alpha: false,
-        pinned: false,
-        outlineColor: '#FF0000'
-      }
+      options: { alpha: false, pinned: false, outlineColor: '#FF0000' },
+      palettePrompt: false,
+      paletteMode: false,
+      palettes: null
     }
   }
 
@@ -41,6 +42,7 @@ export default class App extends Component {
     this.setMainMenu()
     this.initSavedColors()
     this.initOptions()
+    this.initPalettes()
   }
 
   setWindowId = () => {
@@ -58,6 +60,13 @@ export default class App extends Component {
             { label: 'Options', click: () => this.enterOptions() },
             { type: 'separator' },
             { role: 'quit' }
+          ]
+        },
+        {
+          label: 'Palette',
+          submenu: [
+            { label: 'Save Palette', click: () => this.openPalettePrompt() },
+            { label: 'View Palettes', click: () => this.enterPalettes() }
           ]
         },
         {
@@ -84,7 +93,8 @@ export default class App extends Component {
 
   initOptions = () => {
     var options
-    fs.readFile(path.resolve(__static, 'options.json'), (error, data) => {
+    var filepath = path.resolve(__static, 'options.json')
+    fs.readFile(filepath, (error, data) => {
       if (error) throw error
       if (!data.length) {
         return
@@ -92,6 +102,22 @@ export default class App extends Component {
         options = JSON.parse(data)
         options.pinned && mainWin.setAlwaysOnTop(true)
         this.setState({ options })
+      }
+    })
+  }
+
+  initPalettes = () => {
+    var palettes
+    var filepath = path.resolve(__static, 'palettes.json')
+    fs.readFile(filepath, (error, data) => {
+      if (error) throw error
+      if (!data.length) {
+        palettes = []
+        this.setState({ palettes })
+        return
+      } else {
+        palettes = JSON.parse(data)
+        this.setState({ palettes })
       }
     })
   }
@@ -120,8 +146,6 @@ export default class App extends Component {
       dropperWin = null
     })
   }
-
-  enterOptions = () => this.setState({ optionsMode: true })
 
   addNewColor = (color, type) => {
     const { colors } = this.state
@@ -158,6 +182,11 @@ export default class App extends Component {
     })
   }
 
+  enterOptions = () =>
+    this.setState({
+      optionsMode: true
+    })
+
   saveOptions = options => {
     this.setState({ options })
     fs.writeFile(
@@ -169,7 +198,33 @@ export default class App extends Component {
     )
   }
 
-  exitOptions = () => this.setState({ optionsMode: false })
+  exitOptions = () =>
+    this.setState({
+      optionsMode: false
+    })
+
+  enterPalettes = () => this.setState({ paletteMode: true })
+
+  openPalettePrompt = () => {
+    const { colors, optionsMode, paletteMode } = this.state
+    if (optionsMode || paletteMode || colors[0].clean) return
+    this.setState({ palettePrompt: true })
+  }
+
+  closePalettePrompt = () => this.setState({ palettePrompt: false })
+
+  savePalette = () => {
+    const { colors, palettes } = this.state
+    let palette = { title, colors }
+    palettes.push(palette)
+    this.setState({ palettes })
+    let filepath = path.resolve(__static, 'palettes.json')
+    fs.writeFile(filepath, JSON.stringify(palettes), error => {
+      if (error) throw error
+    })
+  }
+
+  exitPalettes = () => this.setState({ paletteMode: false })
 
   handleSwatchClick = c => {
     if (c.color === 'none') return
@@ -201,7 +256,19 @@ export default class App extends Component {
   }
 
   render() {
-    const { windowId, h, s, l, a, colors, optionsMode, options } = this.state
+    const {
+      windowId,
+      h,
+      s,
+      l,
+      a,
+      colors,
+      optionsMode,
+      options,
+      palettePrompt,
+      paletteMode,
+      palettes
+    } = this.state
     if (windowId === 1) {
       if (optionsMode) {
         return (
@@ -212,8 +279,11 @@ export default class App extends Component {
           />
         )
       }
-      return (
-        <div style={{ height: mainHeight, marginTop: '10px' }}>
+      if (paletteMode) {
+        return <Palettes palettes={palettes} exitPalettes={this.exitPalettes} />
+      }
+      return [
+        <div key="main" style={{ height: mainHeight, marginTop: '10px' }}>
           <ColorPicker
             h={h}
             s={s}
@@ -226,8 +296,13 @@ export default class App extends Component {
             enterOptions={this.enterOptions}
             resetSavedColors={this.resetSavedColors}
           />
-        </div>
-      )
+        </div>,
+        <PalettePrompt
+          key="prompt"
+          open={palettePrompt}
+          onClose={this.closePalettePrompt}
+        />
+      ]
     } else {
       return (
         <Dropper width={screenWidth} height={screenHeight} options={options} />
