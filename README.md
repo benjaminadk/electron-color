@@ -5,11 +5,14 @@ An Electron application targeted to Windows
 ### Todos
 
 - [ ] Add outline color to options - is wired up in state already
+- [ ] Fix buttons and spacing in options
+- [x] Use `systemPreferences` to set Material-UI primary color
 - [ ] Add Palette Feature
   - [x] Add `palettes.json` and read on load
   - [ ] Style Material-UI Dialog to look more native
 - [ ] Adjust spacing for hidden opacity bar - temp solution is margin top on stat inputs changes with alpha state
 - [ ] Error messages for fs errors???
+- [ ] Change native electron dialog (discard color) to Material-UI style to match palette dialog
 
 ### Troubleshooting Build Process
 
