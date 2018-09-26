@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function({ colors, handleSwatchClick }) {
+export default function({ colors, handleContextMenu, handleSwatchClick }) {
   return (
     <div className="SavedColors">
       {colors &&
@@ -10,6 +10,7 @@ export default function({ colors, handleSwatchClick }) {
             className="outerSwatch"
             title={c.clean ? 'none' : c.color}
             onClick={() => handleSwatchClick(c.clean ? 'none' : c)}
+            onContextMenu={e => handleContextMenu(e, c, i)}
           >
             <div style={{ backgroundColor: c.color }} className="innerSwatch" />
           </div>

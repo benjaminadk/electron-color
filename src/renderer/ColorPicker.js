@@ -255,6 +255,7 @@ class ColorPicker extends Component {
     const {
       colors,
       options: { alpha },
+      handleContextMenu,
       handleSwatchClick,
       enterOptions,
       resetSavedColors,
@@ -343,7 +344,11 @@ class ColorPicker extends Component {
               />
             </div>
           </div>
-          <ColorGrid colors={colors} handleSwatchClick={handleSwatchClick} />
+          <ColorGrid
+            colors={colors}
+            handleContextMenu={handleContextMenu}
+            handleSwatchClick={handleSwatchClick}
+          />
         </div>
         <MainActions
           addNewColor={this.addNewColor}

@@ -15,6 +15,9 @@ import rgbToHsl from 'rgb-to-hsl'
 const inDev = process.env.NODE_ENV === 'development'
 const [screenWidth, screenHeight] = getScreen()
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
+const PALETTES_PATH = path.resolve(__static, 'palettes.json')
+const COLORS_PATH = path.resolve(__static, 'colors.json')
+
 var mainWin = remote.BrowserWindow.fromId(1)
 var dropperWin
 
@@ -65,8 +68,16 @@ export default class App extends Component {
         {
           label: 'Palette',
           submenu: [
-            { label: 'Save Palette', click: () => this.openPalettePrompt() },
-            { label: 'View Palettes', click: () => this.enterPalettes() }
+            {
+              label: 'Save Current Palette',
+              click: () => this.openPalettePrompt()
+            },
+            { label: 'View Saved Palettes', click: () => this.enterPalettes() },
+            { type: 'separator' },
+            {
+              label: 'Clear Current Palette',
+              click: () => this.resetSavedColors()
+            }
           ]
         },
         {
@@ -79,8 +90,7 @@ export default class App extends Component {
   }
 
   initSavedColors = () => {
-    var filepath = path.resolve(__static, 'colors.json')
-    fs.readFile(filepath, (error, data) => {
+    fs.readFile(COLORS_PATH, (error, data) => {
       if (error) throw error
       if (!data.length) {
         this.overwriteColors()
@@ -108,8 +118,7 @@ export default class App extends Component {
 
   initPalettes = () => {
     var palettes
-    var filepath = path.resolve(__static, 'palettes.json')
-    fs.readFile(filepath, (error, data) => {
+    fs.readFile(PALETTES_PATH, (error, data) => {
       if (error) throw error
       if (!data.length) {
         palettes = []
@@ -154,30 +163,35 @@ export default class App extends Component {
     colors[firstOpen] = newColor
     this.setState({ colors })
     this.handleSwatchClick(newColor)
-    fs.writeFile(
-      path.resolve(__static, 'colors.json'),
-      JSON.stringify(colors),
-      error => {
-        if (error) throw error
-      }
-    )
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
+      if (error) throw error
+    })
+  }
+
+  deleteColor = i => {
+    const { colors } = this.state
+    let newColors = colors.filter((c, index) => index !== i)
+    newColors.push({ color: 'transparent', clean: true, type: null })
+    this.setState({ colors: newColors })
+    fs.writeFile(COLORS_PATH, JSON.stringify(newColors), error => {
+      if (error) throw error
+    })
   }
 
   resetSavedColors = () => {
-    let userInput = confirm(`Discard ALL Saved Colors? This CANNOT be undone!`)
-    if (userInput) {
+    let confirmed = confirm(`Discard ALL Saved Colors? This CANNOT be undone!`)
+    if (confirmed) {
       this.overwriteColors()
     }
   }
 
   overwriteColors = () => {
-    var filepath = path.resolve(__static, 'colors.json')
     var colors = []
     for (let i = 0; i < 64; i++) {
       colors[i] = { color: 'transparent', clean: true, type: null }
     }
     this.setState({ colors })
-    fs.writeFile(filepath, JSON.stringify(colors), error => {
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
       if (error) throw error
     })
   }
@@ -220,11 +234,23 @@ export default class App extends Component {
     let palette = { title, colors }
     palettes.push(palette)
     this.setState({ palettes })
-    let filepath = path.resolve(__static, 'palettes.json')
-    fs.writeFile(filepath, JSON.stringify(palettes), error => {
+    fs.writeFile(PALETTES_PATH, JSON.stringify(palettes), error => {
       if (error) throw error
     })
     return true
+  }
+
+  deletePalette = (i, title) => {
+    let confirmed = confirm(`Delete Palette: ${title}`)
+    if (confirmed) {
+      const { palettes } = this.state
+      let newPalettes = palettes.filter((p, index) => i !== index)
+
+      this.setState({ palettes: newPalettes })
+      fs.writeFile(PALETTES_PATH, JSON.stringify(newPalettes), error => {
+        if (error) throw error
+      })
+    }
   }
 
   exitPalettes = () => this.setState({ paletteMode: false })
@@ -258,6 +284,16 @@ export default class App extends Component {
     }
   }
 
+  handleContextMenu = (e, c, i) => {
+    e.preventDefault()
+    if (c.clean) return
+    const template = [
+      { label: 'Delete Color', click: () => this.deleteColor(i) }
+    ]
+    const menu = remote.Menu.buildFromTemplate(template)
+    menu.popup({ window: remote.getCurrentWindow() })
+  }
+
   render() {
     const {
       windowId,
@@ -283,7 +319,13 @@ export default class App extends Component {
         )
       }
       if (paletteMode) {
-        return <Palettes palettes={palettes} exitPalettes={this.exitPalettes} />
+        return (
+          <Palettes
+            palettes={palettes}
+            deletePalette={this.deletePalette}
+            exitPalettes={this.exitPalettes}
+          />
+        )
       }
       return [
         <div key="main" style={{ height: mainHeight, marginTop: '10px' }}>
@@ -294,6 +336,7 @@ export default class App extends Component {
             a={a}
             options={options}
             colors={colors}
+            handleContextMenu={this.handleContextMenu}
             handleSwatchClick={this.handleSwatchClick}
             addNewColor={this.addNewColor}
             enterOptions={this.enterOptions}

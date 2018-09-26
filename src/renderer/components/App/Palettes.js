@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
+import { remote } from 'electron'
 import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListSubheader from '@material-ui/core/ListSubheader'
+import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
+import BackIcon from '@material-ui/icons/ArrowBack'
+import DeleteIcon from '@material-ui/icons/Delete'
 import ColorGrid from '../ColorPicker/ColorGrid'
 import getMainWinDimens from 'common/getMainWinDimens'
 
@@ -13,29 +17,53 @@ const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 
 const styles = theme => ({
   main: {
-    width: mainWidth,
-    height: mainHeight,
+    width: Math.round(mainWidth),
+    height: Math.round(mainHeight),
     display: 'flex'
   },
+  iconButton: {
+    fontSize: theme.typography.pxToRem(18),
+    padding: 0,
+    width: 24,
+    height: 24,
+    color: theme.palette.text.secondary,
+    '&:hover': {
+      background: 'transparent'
+    }
+  },
   list: {
-    width: mainWidth * 0.35,
+    width: Math.round(mainWidth * 0.35),
     height: '100%',
     borderRight: `1px solid ${theme.palette.divider}`,
     overflowY: 'auto'
   },
   subheader: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
     lineHeight: '32px',
-    textAlign: 'center',
     borderBottom: `1px solid ${theme.palette.divider}`
   },
-  listItemRoot: {
-    paddingLeft: theme.spacing.unit
+  subText: {
+    width: '100%',
+    textAlign: 'center',
+    marginLeft: -24
   },
-  listItemSelected: {
-    outline: `1px solid ${theme.palette.divider}`
+  listItemRoot: {
+    paddingLeft: theme.spacing.unit,
+    '&$listItemSelected, &$listItemSelected:hover': {
+      outline: `1px solid ${theme.palette.grey['A200']}`,
+      background: theme.palette.grey[200]
+    }
+  },
+  listItemSelected: {},
+  listItemButton: {
+    '&:hover': {
+      background: theme.palette.grey[100]
+    }
   },
   right: {
-    width: mainWidth * 0.65,
+    width: Math.round(mainWidth * 0.65),
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -54,6 +82,10 @@ class Palettes extends Component {
   }
 
   componentWillMount() {
+    this.resetColors()
+  }
+
+  resetColors = () => {
     var colors = []
     for (let i = 0; i < 64; i++) {
       colors[i] = { color: 'transparent', clean: true, type: null }
@@ -67,14 +99,26 @@ class Palettes extends Component {
     this.setState({ selectedIndex: i, colors })
   }
 
+  deletePalette = (i, title) => {
+    this.props.deletePalette(i, title)
+    this.resetColors()
+    this.setState({ selectedIndex: null })
+  }
+
   render() {
     const { palettes, exitPalettes, classes } = this.props
     const { selectedIndex, colors } = this.state
     return (
       <div className={classes.main}>
         <List classes={{ root: classes.list }}>
-          <ListSubheader classes={{ root: classes.subheader }}>
-            Palettes
+          <ListSubheader disableGutters classes={{ root: classes.subheader }}>
+            <IconButton
+              onClick={exitPalettes}
+              classes={{ root: classes.iconButton }}
+            >
+              <BackIcon fontSize="inherit" />
+            </IconButton>
+            <Typography className={classes.subText}>Palettes</Typography>
           </ListSubheader>
           {palettes &&
             palettes.map((p, i) => (
@@ -87,16 +131,24 @@ class Palettes extends Component {
                 button
                 classes={{
                   root: classes.listItemRoot,
-                  selected: classes.listItemSelected
+                  selected: classes.listItemSelected,
+                  button: classes.listItemButton
                 }}
               >
                 <ListItemText primary={p.title} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    onClick={() => this.deletePalette(i, p.title)}
+                    classes={{ root: classes.iconButton }}
+                  >
+                    <DeleteIcon fontSize="inherit" />
+                  </IconButton>
+                </ListItemSecondaryAction>
               </ListItem>
             ))}
         </List>
         <div className={classes.right}>
           <ColorGrid colors={colors} handleSwatchClick={() => {}} />
-          <Button onClick={exitPalettes}>Back To Color Picker</Button>
         </div>
       </div>
     )

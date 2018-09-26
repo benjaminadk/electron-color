@@ -9,11 +9,11 @@ An Electron application targeted to Windows
 - [x] Use `systemPreferences` to set Material-UI primary color
 - [ ] Add Palette Feature
   - [x] Add `palettes.json` and read on load
-  - [ ] Style Material-UI Dialog to look more native
+  - [x] Style Material-UI Dialog to look more native
 - [ ] Adjust spacing for hidden opacity bar - temp solution is margin top on stat inputs changes with alpha state
 - [ ] Error messages for fs errors???
 - [ ] Change native electron dialog (discard color) to Material-UI style to match palette dialog
-- [ ] Add right click context menu for deleting single color square
+- [x] Add right click context menu for deleting single color square
 - [ ] Add complementary and other quick color generators with math
 
 ### Troubleshooting Build Process
