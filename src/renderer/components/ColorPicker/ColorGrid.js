@@ -1,0 +1,19 @@
+import React from 'react'
+
+export default function({ colors, handleSwatchClick }) {
+  return (
+    <div className="SavedColors">
+      {colors &&
+        colors.map((c, i) => (
+          <div
+            key={`color-${i}`}
+            className="outerSwatch"
+            title={c.clean ? 'none' : c.color}
+            onClick={() => handleSwatchClick(c.clean ? 'none' : c)}
+          >
+            <div style={{ backgroundColor: c.color }} className="innerSwatch" />
+          </div>
+        ))}
+    </div>
+  )
+}

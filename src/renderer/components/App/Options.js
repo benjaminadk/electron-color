@@ -150,20 +150,10 @@ class Options extends Component {
           />
         </div>
         <div className="bottom">
-          <Button
-            className="button"
-            variant="contained"
-            size="small"
-            onClick={this.saveOptions}
-          >
+          <Button className="button" size="small" onClick={this.saveOptions}>
             Save
           </Button>
-          <Button
-            className="button"
-            variant="contained"
-            size="small"
-            onClick={exitOptions}
-          >
+          <Button className="button" size="small" onClick={exitOptions}>
             Cancel
           </Button>
         </div>

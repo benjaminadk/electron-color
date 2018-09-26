@@ -213,8 +213,10 @@ export default class App extends Component {
 
   closePalettePrompt = () => this.setState({ palettePrompt: false })
 
-  savePalette = () => {
+  savePalette = title => {
     const { colors, palettes } = this.state
+    let exists = palettes.find(p => p.title === title)
+    if (exists) return false
     let palette = { title, colors }
     palettes.push(palette)
     this.setState({ palettes })
@@ -222,6 +224,7 @@ export default class App extends Component {
     fs.writeFile(filepath, JSON.stringify(palettes), error => {
       if (error) throw error
     })
+    return true
   }
 
   exitPalettes = () => this.setState({ paletteMode: false })
@@ -301,6 +304,7 @@ export default class App extends Component {
           key="prompt"
           open={palettePrompt}
           onClose={this.closePalettePrompt}
+          savePalette={this.savePalette}
         />
       ]
     } else {

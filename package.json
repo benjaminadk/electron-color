@@ -29,6 +29,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "devtron": "^1.4.0",
     "electron": "^3.0.0",
     "electron-builder": "^20.28.4",
     "electron-webpack": "^2.3.1",

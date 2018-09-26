@@ -5,7 +5,7 @@ import ColorBar from './components/ColorPicker/ColorBar'
 import StatInput from './components/ColorPicker/StatInput'
 import MainSwatch from './components/ColorPicker/MainSwatch'
 import StatOutput from './components/ColorPicker/StatOutput'
-import SavedColors from './components/ColorPicker/SavedColors'
+import ColorGrid from './components/ColorPicker/ColorGrid'
 import MainActions from './components/ColorPicker/MainActions'
 import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
@@ -343,7 +343,7 @@ class ColorPicker extends Component {
               />
             </div>
           </div>
-          <SavedColors colors={colors} handleSwatchClick={handleSwatchClick} />
+          <ColorGrid colors={colors} handleSwatchClick={handleSwatchClick} />
         </div>
         <MainActions
           addNewColor={this.addNewColor}

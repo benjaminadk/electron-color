@@ -11,6 +11,27 @@ function getMainColor() {
 }
 
 const theme = createMuiTheme({
+  props: {
+    MuiButtonBase: {
+      disableRipple: true
+    }
+  },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: 0,
+        boxShadow: 'none',
+        backgroundColor: '#fafafa',
+        color: 'black',
+        outline: '1px outset rgb(206, 206, 206)',
+        fontSize: '.75rem',
+        '&:hover': {
+          backgroundColor: '#fafafa',
+          outline: '2px outset rgb(206, 206, 206)'
+        }
+      }
+    }
+  },
   palette: {
     primary: {
       main: getMainColor()
