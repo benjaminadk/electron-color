@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import BackIcon from '@material-ui/icons/ArrowBack'
 import DeleteIcon from '@material-ui/icons/Delete'
+import LoadIcon from '@material-ui/icons/Apps'
 import ColorGrid from '../ColorPicker/ColorGrid'
 import getMainWinDimens from 'common/getMainWinDimens'
 
@@ -52,7 +53,6 @@ const styles = theme => ({
   listItemRoot: {
     paddingLeft: theme.spacing.unit,
     '&$listItemSelected, &$listItemSelected:hover': {
-      outline: `1px solid ${theme.palette.grey['A200']}`,
       background: theme.palette.grey[200]
     }
   },
@@ -99,10 +99,34 @@ class Palettes extends Component {
     this.setState({ selectedIndex: i, colors })
   }
 
+  loadPalette = () => {
+    const { selectedIndex, colors } = this.state
+    if (!Number.isInteger(selectedIndex)) return
+    this.props.loadPalette(colors)
+  }
+
   deletePalette = (i, title) => {
     this.props.deletePalette(i, title)
     this.resetColors()
     this.setState({ selectedIndex: null })
+  }
+
+  deleteColor = i => {
+    const { colors, selectedIndex } = this.state
+    let newColors = colors.filter((c, index) => index !== i)
+    newColors.push({ color: 'transparent', clean: true, type: null })
+    this.setState({ colors: newColors })
+    this.props.updatePalette(selectedIndex, newColors)
+  }
+
+  handleContextMenu = (e, c, i) => {
+    e.preventDefault()
+    if (c.clean) return
+    const template = [
+      { label: 'Delete Color', click: () => this.deleteColor(i) }
+    ]
+    const menu = remote.Menu.buildFromTemplate(template)
+    menu.popup({ window: remote.getCurrentWindow() })
   }
 
   render() {
@@ -138,6 +162,12 @@ class Palettes extends Component {
                 <ListItemText primary={p.title} />
                 <ListItemSecondaryAction>
                   <IconButton
+                    onClick={this.loadPalette}
+                    classes={{ root: classes.iconButton }}
+                  >
+                    <LoadIcon fontSize="inherit" />
+                  </IconButton>
+                  <IconButton
                     onClick={() => this.deletePalette(i, p.title)}
                     classes={{ root: classes.iconButton }}
                   >
@@ -148,7 +178,11 @@ class Palettes extends Component {
             ))}
         </List>
         <div className={classes.right}>
-          <ColorGrid colors={colors} handleSwatchClick={() => {}} />
+          <ColorGrid
+            colors={colors}
+            handleContextMenu={this.handleContextMenu}
+            handleSwatchClick={() => {}}
+          />
         </div>
       </div>
     )

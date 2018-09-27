@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { remote, ipcRenderer } from 'electron'
 import getScreen from 'common/getScreen'
 import getMainWinDimens from 'common/getMainWinDimens'
+import toHSLString from './utils/toHSLString'
+import toHSLParts from './utils/toHSLParts'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
 import Options from './components/App/Options'
 import Palettes from './components/App/Palettes'
@@ -83,7 +85,8 @@ export default class App extends Component {
         {
           label: 'Dropper',
           submenu: [{ label: 'Open', click: () => this.initDropper() }]
-        }
+        },
+        { label: 'Help' }
       ]
       mainWin.setMenu(remote.Menu.buildFromTemplate(template))
     }
@@ -157,12 +160,29 @@ export default class App extends Component {
   }
 
   addNewColor = (color, type) => {
+    var a, cs, newColor
     const { colors } = this.state
-    let newColor = { color, clean: false, type }
+    if (type === 'rgb') {
+      var rgb = color.replace(/[^\d,]/g, '').split(',')
+      var hsl = rgbToHsl(...rgb)
+      var h = Math.round(hsl[0])
+      var s = Math.round(parseInt(hsl[1]), 10)
+      var l = Math.round(parseInt(hsl[2]), 10)
+      if (hsl.length > 3) {
+        a = parseInt(hsl[3], 10)
+        cs = toHSLString(false, h, s, l, a)
+      } else {
+        a = 100
+        cs = toHSLString(true, h, s, l)
+      }
+      newColor = { color: cs, clean: false, type: 'hsl' }
+    } else {
+      newColor = { color, clean: false, type: 'hsl' }
+    }
     let firstOpen = colors.findIndex(c => c.clean)
     colors[firstOpen] = newColor
-    this.setState({ colors })
     this.handleSwatchClick(newColor)
+    this.setState({ colors })
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
       if (error) throw error
     })
@@ -229,23 +249,35 @@ export default class App extends Component {
 
   savePalette = title => {
     const { colors, palettes } = this.state
-    let exists = palettes.find(p => p.title === title)
-    if (exists) return false
-    let palette = { title, colors }
-    palettes.push(palette)
+    var palette = { title, colors }
+    let index = palettes.findIndex(p => p.title === title)
+    if (index === -1) {
+      palettes.push(palette)
+    } else {
+      palettes[index] = palette
+    }
     this.setState({ palettes })
     fs.writeFile(PALETTES_PATH, JSON.stringify(palettes), error => {
       if (error) throw error
     })
-    return true
   }
+
+  updatePalette = (i, colors) => {
+    const { palettes } = this.state
+    palettes[i].colors = colors
+    this.setState({ palettes })
+    fs.writeFile(PALETTES_PATH, JSON.stringify(palettes), error => {
+      if (error) throw error
+    })
+  }
+
+  loadPalette = colors => this.setState({ colors, paletteMode: false })
 
   deletePalette = (i, title) => {
     let confirmed = confirm(`Delete Palette: ${title}`)
     if (confirmed) {
       const { palettes } = this.state
       let newPalettes = palettes.filter((p, index) => i !== index)
-
       this.setState({ palettes: newPalettes })
       fs.writeFile(PALETTES_PATH, JSON.stringify(newPalettes), error => {
         if (error) throw error
@@ -256,43 +288,143 @@ export default class App extends Component {
   exitPalettes = () => this.setState({ paletteMode: false })
 
   handleSwatchClick = c => {
-    if (c.color === 'none') return
-    var h, s, l, a, rgb, hsl
-    if (c.type === 'rgb') {
-      rgb = c.color.replace(/[^\d,]/g, '').split(',')
-      hsl = rgbToHsl(...rgb)
-      h = Math.round(hsl[0])
-      s = Math.round(parseInt(hsl[1]), 10)
-      l = Math.round(parseInt(hsl[2]), 10)
-      if (hsl.length > 3) {
-        a = parseInt(hsl[3], 10)
-      } else {
-        a = 100
-      }
-      this.setState({ h, s, l, a })
-    } else if (c.type === 'hsl') {
-      hsl = c.color.replace(/[^\d,]/g, '').split(',')
-      h = hsl[0]
-      s = hsl[1]
-      l = hsl[2]
-      if (hsl.length > 3) {
-        a = parseInt(hsl[3], 10)
-      } else {
-        a = 100
-      }
-      this.setState({ h, s, l, a })
-    }
+    if (c === 'none') return
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    this.setState({ h, s, l, a })
   }
 
   handleContextMenu = (e, c, i) => {
     e.preventDefault()
     if (c.clean) return
     const template = [
+      { label: 'Color Generators', enabled: false },
+      { type: 'separator' },
+      {
+        label: 'Complementary',
+        click: () => this.makeCompColor(c, i)
+      },
+      {
+        label: 'Split Complementary',
+        click: () => this.makeSplitCompColor(c, i)
+      },
+      { label: 'Triadic', click: () => this.makeTriadicColor(c, i) },
+      { label: 'Tetradic', click: () => this.makeTetradic(c, i) },
+      { label: 'Analagous', click: () => this.makeAnalogous(c, i) },
+      { type: 'separator' },
       { label: 'Delete Color', click: () => this.deleteColor(i) }
     ]
     const menu = remote.Menu.buildFromTemplate(template)
     menu.popup({ window: remote.getCurrentWindow() })
   }
+
+  makeCompColor = (c, i) => {
+    const { colors } = this.state
+    if (!colors[63].clean) return
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    h = Math.abs(h - 180)
+    const cs = toHSLString(bool, h, s, l, a)
+    const color = { color: cs, clean: false, type: 'hsl' }
+    colors.splice(i + 1, 0, color)
+    colors.pop()
+    this.setState({ colors })
+    this.handleSwatchClick(c)
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
+      if (error) throw error
+    })
+  }
+
+  makeSplitCompColor = (c, i) => {
+    const { colors } = this.state
+    if (!colors[62].clean) return
+    var h1, h2, cs1, cs2
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    h1 = Math.abs(h - 210)
+    h2 = Math.abs(h - 150)
+    cs1 = toHSLString(bool, h1, s, l, a)
+    cs2 = toHSLString(bool, h2, s, l, a)
+    const color1 = { color: cs1, clean: false, type: 'hsl' }
+    const color2 = { color: cs2, clean: false, type: 'hsl' }
+    colors.splice(i + 1, 0, color1, color2)
+    colors.pop()
+    colors.pop()
+    this.setState({ colors })
+    this.handleSwatchClick(c)
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
+      if (error) throw error
+    })
+  }
+
+  makeTriadicColor = (c, i) => {
+    const { colors } = this.state
+    if (!colors[62].clean) return
+    var h1, h2, cs1, cs2
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    h1 = Math.abs(h - 240)
+    h2 = Math.abs(h - 120)
+    cs1 = toHSLString(bool, h1, s, l, a)
+    cs2 = toHSLString(bool, h2, s, l, a)
+    const color1 = { color: cs1, clean: false, type: 'hsl' }
+    const color2 = { color: cs2, clean: false, type: 'hsl' }
+    colors.splice(i + 1, 0, color1, color2)
+    colors.pop()
+    colors.pop()
+    this.setState({ colors })
+    this.handleSwatchClick(c)
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
+      if (error) throw error
+    })
+  }
+
+  makeTetradic = (c, i) => {
+    const { colors } = this.state
+    if (!colors[61].clean) return
+    var h1, h2, h3, cs1, cs2, cs3
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    h1 = Math.abs(h - 270)
+    h2 = Math.abs(h - 180)
+    h3 = Math.abs(h - 90)
+    cs1 = toHSLString(bool, h1, s, l, a)
+    cs2 = toHSLString(bool, h2, s, l, a)
+    cs3 = toHSLString(bool, h3, s, l, a)
+    const color1 = { color: cs1, clean: false, type: 'hsl' }
+    const color2 = { color: cs2, clean: false, type: 'hsl' }
+    const color3 = { color: cs3, clean: false, type: 'hsl' }
+    colors.splice(i + 1, 0, color1, color2, color3)
+    for (let i = 0; i < 3; i++) colors.pop()
+    this.setState({ colors })
+    this.handleSwatchClick(c)
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
+      if (error) throw error
+    })
+  }
+
+  makeAnalogous = (c, i) => {
+    const { colors } = this.state
+    if (!colors[60].clean) return
+    var h1, h2, h3, h4, cs1, cs2, cs3, cs4
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    h1 = Math.abs(h - 330)
+    h2 = Math.abs(h - 300)
+    h3 = Math.abs(h - 270)
+    h4 = Math.abs(h - 240)
+    cs1 = toHSLString(bool, h1, s, l, a)
+    cs2 = toHSLString(bool, h2, s, l, a)
+    cs3 = toHSLString(bool, h3, s, l, a)
+    cs4 = toHSLString(bool, h4, s, l, a)
+    const color1 = { color: cs1, clean: false, type: 'hsl' }
+    const color2 = { color: cs2, clean: false, type: 'hsl' }
+    const color3 = { color: cs3, clean: false, type: 'hsl' }
+    const color4 = { color: cs4, clean: false, type: 'hsl' }
+    colors.splice(i + 1, 0, color1, color2, color3, color4)
+    for (let i = 0; i < 4; i++) colors.pop()
+    this.setState({ colors })
+    this.handleSwatchClick(c)
+    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
+      if (error) throw error
+    })
+  }
+
+  makeMonochromeColor = (c, i) => {}
 
   render() {
     const {
@@ -322,6 +454,8 @@ export default class App extends Component {
         return (
           <Palettes
             palettes={palettes}
+            updatePalette={this.updatePalette}
+            loadPalette={this.loadPalette}
             deletePalette={this.deletePalette}
             exitPalettes={this.exitPalettes}
           />

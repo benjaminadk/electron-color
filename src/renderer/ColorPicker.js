@@ -223,6 +223,25 @@ class ColorPicker extends Component {
     }
   }
 
+  handleArrowClick = (mode, inc) => {
+    var val = this.state[mode]
+    let offset = BAR_HEIGHT * 0.5
+    val = inc ? val + 1 : val - 1
+    if (val < 0) val = 0
+    if (mode === 'hue') {
+      if (val > 360) val = 360
+      this.setState({ hue: val, hueLeft: val - offset }, () =>
+        this.updatePickerBars()
+      )
+    } else {
+      if (val > 100) val = 100
+      this.setState({
+        [mode]: val,
+        [`${mode}Left`]: Math.round(val * SLICE_WIDTH) - offset
+      })
+    }
+  }
+
   addNewColor = () => {
     const { hue, sat, lit, opa } = this.state
     const {
@@ -299,11 +318,12 @@ class ColorPicker extends Component {
                 />
               </div>
             </Collapse>
-            <div className="stats" style={{ marginTop: !alpha ? 40 : 10 }}>
+            <div className="stats" style={{ marginTop: 10 }}>
               <StatInput
                 type="hue"
                 value={hue}
                 onChange={this.onChange}
+                onClick={this.handleArrowClick}
                 before="H"
                 after="&deg;"
               />
@@ -311,6 +331,7 @@ class ColorPicker extends Component {
                 type="sat"
                 value={sat}
                 onChange={this.onChange}
+                onClick={this.handleArrowClick}
                 before="S"
                 after="%"
               />
@@ -318,6 +339,7 @@ class ColorPicker extends Component {
                 type="lit"
                 value={lit}
                 onChange={this.onChange}
+                onClick={this.handleArrowClick}
                 before="L"
                 after="%"
               />
@@ -325,6 +347,7 @@ class ColorPicker extends Component {
                 type="opa"
                 value={opa}
                 onChange={this.onChange}
+                onClick={this.handleArrowClick}
                 before="A"
                 after="%"
               />

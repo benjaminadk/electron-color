@@ -10,11 +10,14 @@ An Electron application targeted to Windows
 - [ ] Add Palette Feature
   - [x] Add `palettes.json` and read on load
   - [x] Style Material-UI Dialog to look more native
+  - [ ] Display stats or more UI in Palettes
 - [ ] Adjust spacing for hidden opacity bar - temp solution is margin top on stat inputs changes with alpha state
 - [ ] Error messages for fs errors???
 - [ ] Change native electron dialog (discard color) to Material-UI style to match palette dialog
 - [x] Add right click context menu for deleting single color square
 - [ ] Add complementary and other quick color generators with math
+- [ ] Remove `type` property from all colors - added auto convert to dropper
+- [ ] Add arrows or wheel listener to adjust H,S,L,A in color picker
 
 ### Troubleshooting Build Process
 

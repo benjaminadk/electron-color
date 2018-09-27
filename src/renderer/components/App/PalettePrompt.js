@@ -59,27 +59,22 @@ class PalettePrompt extends Component {
     super(props)
 
     this.state = {
-      title: '',
-      error: false
+      title: ''
     }
   }
 
-  handleChange = e => this.setState({ title: e.target.value, error: false })
+  handleChange = e => this.setState({ title: e.target.value })
 
   savePalette = () => {
     const { title } = this.state
-    var success = this.props.savePalette(title)
-    if (success) {
-      this.setState({ title: '' })
-      this.props.onClose()
-    } else {
-      this.setState({ error: true })
-    }
+    this.props.savePalette(title)
+    this.setState({ title: '' })
+    this.props.onClose()
   }
 
   render() {
     const { open, onClose, classes } = this.props
-    const { title, error } = this.state
+    const { title } = this.state
     return (
       <Dialog
         open={open}
@@ -103,9 +98,7 @@ class PalettePrompt extends Component {
             variant="outlined"
             value={title}
             onChange={this.handleChange}
-            label={
-              error ? 'Error: Duplicate Palette Title' : 'Enter Palette Title'
-            }
+            label="Enter Palette Title"
             autoFocus
             InputProps={{
               classes: {
@@ -114,7 +107,6 @@ class PalettePrompt extends Component {
               }
             }}
             InputLabelProps={{ shrink: true }}
-            error={error}
           />
         </DialogContent>
         <DialogActions>

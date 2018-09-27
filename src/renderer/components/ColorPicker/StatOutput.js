@@ -11,7 +11,7 @@ const styles = theme => ({
     padding: 0,
     width: 18,
     height: 18,
-    color: '#545959',
+    color: theme.palette.grey[900],
     '&:hover': {
       background: 'transparent'
     }
@@ -36,7 +36,7 @@ function StatOutput({
         <input
           type="text"
           value={copied === 1 ? msg : alpha ? hsla : hsl}
-          style={{ outline: copied === 1 && '1px solid #545959' }}
+          style={{ outline: copied === 1 && `1px solid ${hex}` }}
           readOnly
         />
         <IconButton
@@ -51,7 +51,7 @@ function StatOutput({
         <input
           type="text"
           value={copied === 2 ? msg : alpha ? rgba : rgb}
-          style={{ outline: copied === 2 && '1px solid #545959' }}
+          style={{ outline: copied === 2 && `1px solid ${hex}` }}
           readOnly
         />
         <IconButton
@@ -66,7 +66,7 @@ function StatOutput({
         <input
           type="text"
           value={copied === 3 ? msg : alpha ? hexa : hex}
-          style={{ outline: copied === 3 && '1px solid #545959' }}
+          style={{ outline: copied === 3 && `1px solid ${hex}` }}
           readOnly
         />
         <IconButton
