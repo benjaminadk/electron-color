@@ -1,7 +1,7 @@
-export default function(hsl, h, s, l, a) {
-  if (hsl) {
-    return `hsl(${h},${s}%,${l}%)`
-  } else {
+export default function(withAlpha, h, s, l, a) {
+  if (withAlpha) {
     return `hsla(${h},${s}%,${l}%,${(a * 0.01).toFixed(2)})`
+  } else {
+    return `hsl(${h},${s}%,${l}%)`
   }
 }

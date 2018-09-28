@@ -10,6 +10,7 @@ import MainActions from './components/ColorPicker/MainActions'
 import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from './utils/copyToClipboard'
+import toHSLString from './utils/toHSLString'
 
 const BAR_HEIGHT = 16
 const BAR_WIDTH = 360
@@ -53,7 +54,7 @@ class ColorPicker extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.h !== this.props.h) {
+    if (prevProps.h !== this.props.h || prevProps.l !== this.props.l) {
       let { h, s, l, a } = this.props
       let hue = h
       let hueLeft = h - 8
@@ -247,9 +248,7 @@ class ColorPicker extends Component {
     const {
       options: { alpha }
     } = this.props
-    let color = alpha
-      ? `hsla(${hue}, ${sat}%, ${lit}%, ${(opa * 0.01).toFixed(2)})`
-      : `hsl(${hue}, ${sat}%, ${lit}%)`
+    let color = toHSLString(alpha, hue, sat, lit, opa)
     this.props.addNewColor(color, 'hsl')
   }
 
@@ -280,8 +279,8 @@ class ColorPicker extends Component {
       resetSavedColors,
       classes
     } = this.props
-    const hsl = `hsl(${hue}, ${sat}%, ${lit}%)`
-    const hsla = `hsla(${hue}, ${sat}%, ${lit}%, ${(opa * 0.01).toFixed(2)})`
+    const hsl = toHSLString(false, hue, sat, lit, opa)
+    const hsla = toHSLString(true, hue, sat, lit, opa)
     const rgb = HSLtoRGBorHEX(hue, sat, lit, true)
     const rgba = HSLAtoRGBAorHEXA(hue, sat, lit, opa, true)
     const hex = HSLtoRGBorHEX(hue, sat, lit, false)

@@ -5,6 +5,14 @@ import getMainWinDimens from 'common/getMainWinDimens'
 import toHSLString from './utils/toHSLString'
 import toHSLParts from './utils/toHSLParts'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
+import {
+  COMP_ICON,
+  SPLIT_ICON,
+  TRIADIC_ICON,
+  TETRADIC_ICON,
+  ANALOGOUS_ICON,
+  MONO_ICON
+} from 'common/icon'
 import Options from './components/App/Options'
 import Palettes from './components/App/Palettes'
 import PalettePrompt from './components/App/PalettePrompt'
@@ -19,6 +27,7 @@ const [screenWidth, screenHeight] = getScreen()
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 const PALETTES_PATH = path.resolve(__static, 'palettes.json')
 const COLORS_PATH = path.resolve(__static, 'colors.json')
+const OPTIONS_PATH = path.resolve(__static, 'options.json')
 
 var mainWin = remote.BrowserWindow.fromId(1)
 var dropperWin
@@ -106,8 +115,7 @@ export default class App extends Component {
 
   initOptions = () => {
     var options
-    var filepath = path.resolve(__static, 'options.json')
-    fs.readFile(filepath, (error, data) => {
+    fs.readFile(OPTIONS_PATH, (error, data) => {
       if (error) throw error
       if (!data.length) {
         return
@@ -162,6 +170,7 @@ export default class App extends Component {
   addNewColor = (color, type) => {
     var a, cs, newColor
     const { colors } = this.state
+    if (!colors[63].clean) return
     if (type === 'rgb') {
       var rgb = color.replace(/[^\d,]/g, '').split(',')
       var hsl = rgbToHsl(...rgb)
@@ -175,9 +184,9 @@ export default class App extends Component {
         a = 100
         cs = toHSLString(true, h, s, l)
       }
-      newColor = { color: cs, clean: false, type: 'hsl' }
+      newColor = { color: cs, clean: false }
     } else {
-      newColor = { color, clean: false, type: 'hsl' }
+      newColor = { color, clean: false }
     }
     let firstOpen = colors.findIndex(c => c.clean)
     colors[firstOpen] = newColor
@@ -191,7 +200,7 @@ export default class App extends Component {
   deleteColor = i => {
     const { colors } = this.state
     let newColors = colors.filter((c, index) => index !== i)
-    newColors.push({ color: 'transparent', clean: true, type: null })
+    newColors.push({ color: 'transparent', clean: true })
     this.setState({ colors: newColors })
     fs.writeFile(COLORS_PATH, JSON.stringify(newColors), error => {
       if (error) throw error
@@ -208,7 +217,7 @@ export default class App extends Component {
   overwriteColors = () => {
     var colors = []
     for (let i = 0; i < 64; i++) {
-      colors[i] = { color: 'transparent', clean: true, type: null }
+      colors[i] = { color: 'transparent', clean: true }
     }
     this.setState({ colors })
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
@@ -223,13 +232,9 @@ export default class App extends Component {
 
   saveOptions = options => {
     this.setState({ options })
-    fs.writeFile(
-      path.resolve(__static, 'options.json'),
-      JSON.stringify(options),
-      error => {
-        if (error) throw error
-      }
-    )
+    fs.writeFile(OPTIONS_PATH, JSON.stringify(options), error => {
+      if (error) throw error
+    })
   }
 
   exitOptions = () =>
@@ -301,15 +306,34 @@ export default class App extends Component {
       { type: 'separator' },
       {
         label: 'Complementary',
-        click: () => this.makeCompColor(c, i)
+        click: () => this.makeCompColor(c, i),
+        icon: COMP_ICON
       },
       {
         label: 'Split Complementary',
-        click: () => this.makeSplitCompColor(c, i)
+        click: () => this.makeSplitCompColor(c, i),
+        icon: SPLIT_ICON
       },
-      { label: 'Triadic', click: () => this.makeTriadicColor(c, i) },
-      { label: 'Tetradic', click: () => this.makeTetradic(c, i) },
-      { label: 'Analagous', click: () => this.makeAnalogous(c, i) },
+      {
+        label: 'Triadic',
+        click: () => this.makeTriadicColor(c, i),
+        icon: TRIADIC_ICON
+      },
+      {
+        label: 'Tetradic',
+        click: () => this.makeTetradic(c, i),
+        icon: TETRADIC_ICON
+      },
+      {
+        label: 'Analagous',
+        click: () => this.makeAnalogous(c, i),
+        icon: ANALOGOUS_ICON
+      },
+      {
+        label: 'Monochromatic',
+        click: () => this.makeMonochromeColor(c, i),
+        icon: MONO_ICON
+      },
       { type: 'separator' },
       { label: 'Delete Color', click: () => this.deleteColor(i) }
     ]
@@ -317,114 +341,67 @@ export default class App extends Component {
     menu.popup({ window: remote.getCurrentWindow() })
   }
 
-  makeCompColor = (c, i) => {
+  generateColors = (c, i, x1, x2, x3) => {
     const { colors } = this.state
-    if (!colors[63].clean) return
+    var h1, cs1, color
     var [bool, h, s, l, a] = toHSLParts(c.color)
-    h = Math.abs(h - 180)
-    const cs = toHSLString(bool, h, s, l, a)
-    const color = { color: cs, clean: false, type: 'hsl' }
-    colors.splice(i + 1, 0, color)
-    colors.pop()
+    for (let y = x1; y <= x2; y += x3) {
+      h1 = (h + y) % 360
+      cs1 = toHSLString(bool, h1, s, l, a)
+      color = { color: cs1, clean: false }
+      colors.splice(i + 1, 0, color)
+      colors.pop()
+    }
     this.setState({ colors })
     this.handleSwatchClick(c)
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
       if (error) throw error
     })
+  }
+
+  makeCompColor = (c, i) => {
+    if (!this.state.colors[63].clean) return
+    this.generateColors(c, i, 180, 180, 180)
   }
 
   makeSplitCompColor = (c, i) => {
-    const { colors } = this.state
-    if (!colors[62].clean) return
-    var h1, h2, cs1, cs2
-    var [bool, h, s, l, a] = toHSLParts(c.color)
-    h1 = Math.abs(h - 210)
-    h2 = Math.abs(h - 150)
-    cs1 = toHSLString(bool, h1, s, l, a)
-    cs2 = toHSLString(bool, h2, s, l, a)
-    const color1 = { color: cs1, clean: false, type: 'hsl' }
-    const color2 = { color: cs2, clean: false, type: 'hsl' }
-    colors.splice(i + 1, 0, color1, color2)
-    colors.pop()
-    colors.pop()
-    this.setState({ colors })
-    this.handleSwatchClick(c)
-    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
-    })
+    if (!this.state.colors[62].clean) return
+    this.generateColors(c, i, 150, 210, 60)
   }
 
   makeTriadicColor = (c, i) => {
-    const { colors } = this.state
-    if (!colors[62].clean) return
-    var h1, h2, cs1, cs2
-    var [bool, h, s, l, a] = toHSLParts(c.color)
-    h1 = Math.abs(h - 240)
-    h2 = Math.abs(h - 120)
-    cs1 = toHSLString(bool, h1, s, l, a)
-    cs2 = toHSLString(bool, h2, s, l, a)
-    const color1 = { color: cs1, clean: false, type: 'hsl' }
-    const color2 = { color: cs2, clean: false, type: 'hsl' }
-    colors.splice(i + 1, 0, color1, color2)
-    colors.pop()
-    colors.pop()
-    this.setState({ colors })
-    this.handleSwatchClick(c)
-    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
-    })
+    if (!this.state.colors[62].clean) return
+    this.generateColors(c, i, 120, 240, 120)
   }
 
   makeTetradic = (c, i) => {
-    const { colors } = this.state
-    if (!colors[61].clean) return
-    var h1, h2, h3, cs1, cs2, cs3
-    var [bool, h, s, l, a] = toHSLParts(c.color)
-    h1 = Math.abs(h - 270)
-    h2 = Math.abs(h - 180)
-    h3 = Math.abs(h - 90)
-    cs1 = toHSLString(bool, h1, s, l, a)
-    cs2 = toHSLString(bool, h2, s, l, a)
-    cs3 = toHSLString(bool, h3, s, l, a)
-    const color1 = { color: cs1, clean: false, type: 'hsl' }
-    const color2 = { color: cs2, clean: false, type: 'hsl' }
-    const color3 = { color: cs3, clean: false, type: 'hsl' }
-    colors.splice(i + 1, 0, color1, color2, color3)
-    for (let i = 0; i < 3; i++) colors.pop()
-    this.setState({ colors })
-    this.handleSwatchClick(c)
-    fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
-    })
+    if (!this.state.colors[61].clean) return
+    this.generateColors(c, i, 90, 270, 90)
   }
 
   makeAnalogous = (c, i) => {
+    if (!this.state.colors[60].clean) return
+    this.generateColors(c, i, 30, 90, 30)
+  }
+
+  makeMonochromeColor = (c, i) => {
     const { colors } = this.state
-    if (!colors[60].clean) return
-    var h1, h2, h3, h4, cs1, cs2, cs3, cs4
+    if (!colors[57].clean) return
+    var cs, color
     var [bool, h, s, l, a] = toHSLParts(c.color)
-    h1 = Math.abs(h - 330)
-    h2 = Math.abs(h - 300)
-    h3 = Math.abs(h - 270)
-    h4 = Math.abs(h - 240)
-    cs1 = toHSLString(bool, h1, s, l, a)
-    cs2 = toHSLString(bool, h2, s, l, a)
-    cs3 = toHSLString(bool, h3, s, l, a)
-    cs4 = toHSLString(bool, h4, s, l, a)
-    const color1 = { color: cs1, clean: false, type: 'hsl' }
-    const color2 = { color: cs2, clean: false, type: 'hsl' }
-    const color3 = { color: cs3, clean: false, type: 'hsl' }
-    const color4 = { color: cs4, clean: false, type: 'hsl' }
-    colors.splice(i + 1, 0, color1, color2, color3, color4)
-    for (let i = 0; i < 4; i++) colors.pop()
+    for (let x = 15; x <= 85; x += 10) {
+      cs = toHSLString(bool, h, s, x, a)
+      color = { color: cs, clean: false }
+      x === 85 && colors.splice(i, 1, color)
+      x !== 85 && colors.splice(i + 1, 0, color)
+      x !== 85 && colors.pop()
+    }
     this.setState({ colors })
     this.handleSwatchClick(c)
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
       if (error) throw error
     })
   }
-
-  makeMonochromeColor = (c, i) => {}
 
   render() {
     const {
@@ -462,7 +439,7 @@ export default class App extends Component {
         )
       }
       return [
-        <div key="main" style={{ height: mainHeight, marginTop: '10px' }}>
+        <div key="main" style={{ height: mainHeight, marginTop: 10 }}>
           <ColorPicker
             h={h}
             s={s}

@@ -15,3 +15,15 @@ body {
   padding: 0;
   overflow: hidden;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  border-left: 1px solid lightgrey;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: lightgray;
+}

@@ -96,30 +96,30 @@
         }
       }
     }
-
-    .formats {
-      height: $main-swatch-height;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      input {
-        width: $main-swatch-width;
-        padding: $detail-font-padding;
-        margin-right: 5px;
-        font-size: $detail-font-size;
-        text-align: center;
-
-        &::selection {
-          background: none;
-        }
-      }
-    }
   }
 
   .actions {
     display: flex;
     justify-content: space-between;
     margin: 30px 20px 0 0;
+  }
+}
+
+.formats {
+  height: $main-swatch-height;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  input {
+    width: $main-swatch-width;
+    padding: $detail-font-padding;
+    margin-right: 5px;
+    font-size: $detail-font-size;
+    text-align: center;
+
+    &::selection {
+      background: none;
+    }
   }
 }

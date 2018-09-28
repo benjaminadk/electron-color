@@ -12,7 +12,12 @@ import BackIcon from '@material-ui/icons/ArrowBack'
 import DeleteIcon from '@material-ui/icons/Delete'
 import LoadIcon from '@material-ui/icons/Apps'
 import ColorGrid from '../ColorPicker/ColorGrid'
+import StatOutput from '../ColorPicker/StatOutput'
 import getMainWinDimens from 'common/getMainWinDimens'
+import toHSLParts from '../../utils/toHSLParts'
+import toHSLString from '../../utils/toHSLString'
+import HSLtoRGBorHEX from '../../utils/HSLtoRGBorHEX'
+import HSLAtoRGBAorHEXA from '../../utils/HSLAtoRGBAorHEXA'
 
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 
@@ -34,16 +39,23 @@ const styles = theme => ({
   },
   list: {
     width: Math.round(mainWidth * 0.35),
-    height: '100%',
+    maxHeight: Math.round(mainHeight - 100),
     borderRight: `1px solid ${theme.palette.divider}`,
     overflowY: 'auto'
+  },
+  listPadding: {
+    paddingTop: 0,
+    paddingBottom: 10
   },
   subheader: {
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     lineHeight: '32px',
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.common.white,
+    paddingTop: 4,
+    zIndex: 2
   },
   subText: {
     width: '100%',
@@ -77,7 +89,11 @@ class Palettes extends Component {
 
     this.state = {
       selectedIndex: null,
-      colors: null
+      colors: null,
+      h: 0,
+      s: 0,
+      l: 0,
+      a: 0
     }
   }
 
@@ -88,7 +104,7 @@ class Palettes extends Component {
   resetColors = () => {
     var colors = []
     for (let i = 0; i < 64; i++) {
-      colors[i] = { color: 'transparent', clean: true, type: null }
+      colors[i] = { color: 'transparent', clean: true }
     }
     this.setState({ colors })
   }
@@ -114,7 +130,7 @@ class Palettes extends Component {
   deleteColor = i => {
     const { colors, selectedIndex } = this.state
     let newColors = colors.filter((c, index) => index !== i)
-    newColors.push({ color: 'transparent', clean: true, type: null })
+    newColors.push({ color: 'transparent', clean: true })
     this.setState({ colors: newColors })
     this.props.updatePalette(selectedIndex, newColors)
   }
@@ -129,12 +145,24 @@ class Palettes extends Component {
     menu.popup({ window: remote.getCurrentWindow() })
   }
 
+  handleSwatchClick = c => {
+    if (c === 'none') return
+    var [bool, h, s, l, a] = toHSLParts(c.color)
+    this.setState({ h, s, l, a })
+  }
+
   render() {
     const { palettes, exitPalettes, classes } = this.props
-    const { selectedIndex, colors } = this.state
+    const { selectedIndex, colors, h, s, l, a } = this.state
+    const hsl = toHSLString(false, h, s, l, a)
+    const hsla = toHSLString(true, h, s, l, a)
+    const rgb = HSLtoRGBorHEX(h, s, l, true)
+    const rgba = HSLAtoRGBAorHEXA(h, s, l, a, true)
+    const hex = HSLtoRGBorHEX(h, s, l, false)
+    const hexa = HSLAtoRGBAorHEXA(h, s, l, a, false)
     return (
       <div className={classes.main}>
-        <List classes={{ root: classes.list }}>
+        <List classes={{ root: classes.list, padding: classes.listPadding }}>
           <ListSubheader disableGutters classes={{ root: classes.subheader }}>
             <IconButton
               onClick={exitPalettes}
@@ -181,8 +209,18 @@ class Palettes extends Component {
           <ColorGrid
             colors={colors}
             handleContextMenu={this.handleContextMenu}
-            handleSwatchClick={() => {}}
+            handleSwatchClick={this.handleSwatchClick}
           />
+          <div>
+            <StatOutput
+              hsl={hsl}
+              hsla={hsla}
+              rgb={rgb}
+              rgba={rgba}
+              hex={hex}
+              hexa={hexa}
+            />
+          </div>
         </div>
       </div>
     )
