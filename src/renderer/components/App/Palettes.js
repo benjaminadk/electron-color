@@ -18,15 +18,11 @@ import toHSLParts from '../../utils/toHSLParts'
 import toHSLString from '../../utils/toHSLString'
 import HSLtoRGBorHEX from '../../utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from '../../utils/HSLAtoRGBAorHEXA'
+import copyToClipboard from '../../utils/copyToClipboard'
 
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 
 const styles = theme => ({
-  main: {
-    width: Math.round(mainWidth),
-    height: Math.round(mainHeight),
-    display: 'flex'
-  },
   iconButton: {
     fontSize: theme.typography.pxToRem(18),
     padding: 0,
@@ -73,13 +69,6 @@ const styles = theme => ({
     '&:hover': {
       background: theme.palette.grey[100]
     }
-  },
-  right: {
-    width: Math.round(mainWidth * 0.65),
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
   }
 })
 
@@ -92,13 +81,15 @@ class Palettes extends Component {
       colors: null,
       h: 0,
       s: 0,
-      l: 0,
-      a: 0
+      l: 100,
+      a: 100,
+      copied: false
     }
   }
 
   componentWillMount() {
-    this.resetColors()
+    const { palettes } = this.props
+    palettes.length ? this.selectPalette(0) : this.resetColors()
   }
 
   resetColors = () => {
@@ -113,6 +104,7 @@ class Palettes extends Component {
     const { palettes } = this.props
     let colors = palettes[i].colors
     this.setState({ selectedIndex: i, colors })
+    this.handleSwatchClick(colors[0])
   }
 
   loadPalette = () => {
@@ -150,10 +142,20 @@ class Palettes extends Component {
     var [bool, h, s, l, a] = toHSLParts(c.color)
     this.setState({ h, s, l, a })
   }
+  copyToClipboard = (text, i) => {
+    copyToClipboard(text)
+    this.setState({ copied: i })
+    setTimeout(() => this.setState({ copied: null }), 3000)
+  }
 
   render() {
-    const { palettes, exitPalettes, classes } = this.props
-    const { selectedIndex, colors, h, s, l, a } = this.state
+    const {
+      palettes,
+      exitPalettes,
+      options: { alpha },
+      classes
+    } = this.props
+    const { selectedIndex, colors, h, s, l, a, copied } = this.state
     const hsl = toHSLString(false, h, s, l, a)
     const hsla = toHSLString(true, h, s, l, a)
     const rgb = HSLtoRGBorHEX(h, s, l, true)
@@ -161,7 +163,13 @@ class Palettes extends Component {
     const hex = HSLtoRGBorHEX(h, s, l, false)
     const hexa = HSLAtoRGBAorHEXA(h, s, l, a, false)
     return (
-      <div className={classes.main}>
+      <div
+        className="Palettes"
+        style={{
+          width: Math.round(mainWidth),
+          height: Math.round(mainHeight)
+        }}
+      >
         <List classes={{ root: classes.list, padding: classes.listPadding }}>
           <ListSubheader disableGutters classes={{ root: classes.subheader }}>
             <IconButton
@@ -205,13 +213,17 @@ class Palettes extends Component {
               </ListItem>
             ))}
         </List>
-        <div className={classes.right}>
+        <div className="right" style={{ width: Math.round(mainWidth * 0.65) }}>
           <ColorGrid
             colors={colors}
             handleContextMenu={this.handleContextMenu}
             handleSwatchClick={this.handleSwatchClick}
           />
-          <div>
+          <div className="output">
+            <div
+              className="swatch"
+              style={{ backgroundColor: alpha ? hsla : hsl }}
+            />
             <StatOutput
               hsl={hsl}
               hsla={hsla}
@@ -219,6 +231,9 @@ class Palettes extends Component {
               rgba={rgba}
               hex={hex}
               hexa={hexa}
+              alpha={alpha}
+              copied={copied}
+              copyToClipboard={this.copyToClipboard}
             />
           </div>
         </div>

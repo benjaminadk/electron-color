@@ -9,11 +9,20 @@
     flex-direction: column;
     align-items: flex-start;
     margin-left: 20px;
+
+    .outline-color {
+      width: 50%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: -14px;
+    }
   }
 
   .bottom {
     display: flex;
     justify-content: flex-start;
+    margin-top: 30px;
 
     .button {
       margin-left: 10px;

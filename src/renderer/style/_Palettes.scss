@@ -1,0 +1,24 @@
+.Palettes {
+  display: flex;
+
+  .right {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .output {
+      width: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 30px;
+
+      .swatch {
+        width: $main-swatch-width;
+        height: $main-swatch-height;
+        border: $classic-border;
+      }
+    }
+  }
+}

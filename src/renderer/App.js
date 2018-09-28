@@ -431,6 +431,7 @@ export default class App extends Component {
         return (
           <Palettes
             palettes={palettes}
+            options={options}
             updatePalette={this.updatePalette}
             loadPalette={this.loadPalette}
             deletePalette={this.deletePalette}

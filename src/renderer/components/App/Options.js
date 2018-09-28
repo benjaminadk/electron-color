@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { remote } from 'electron'
+import SwitchOption from '../Options/SwitchOption'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import Avatar from '@material-ui/core/Avatar'
+import ListItemText from '@material-ui/core/ListItemText'
+import Select from '@material-ui/core/Select'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import Button from '@material-ui/core/Button'
@@ -56,8 +65,32 @@ const styles = theme => ({
   },
   iOSIconChecked: {
     boxShadow: theme.shadows[1]
+  },
+  outline: {
+    width: '35%'
+  },
+  select: {
+    display: 'flex',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    },
+    '&:focus': {
+      backgroundColor: 'transparent'
+    }
+  },
+  listitemText: {
+    paddingLeft: 6,
+    paddingRight: 6
   }
 })
+
+const outlineColors = [
+  { color: '#FF0000', label: 'Red' },
+  { color: '#00FF00', label: 'Green' },
+  { color: '#0000FF', label: 'Blue' },
+  { color: '#FFFF00', label: 'Yellow' }
+]
 
 class Options extends Component {
   constructor(props) {
@@ -83,6 +116,8 @@ class Options extends Component {
     this.setState({ pinned })
   }
 
+  onOutlineChange = e => this.setState({ outlineColor: e.target.value })
+
   saveOptions = () => {
     let options = {
       alpha: this.state.alpha,
@@ -100,54 +135,45 @@ class Options extends Component {
       <div className="Options">
         <Typography variant="title">Options</Typography>
         <div className="middle">
-          <FormControlLabel
-            classes={{ root: classes.control }}
-            label={
-              <Typography variant="caption">
-                Add Alpha To Color Selection
-              </Typography>
-            }
-            labelPlacement="start"
-            control={
-              <Switch
-                checked={alpha}
-                color="primary"
-                onChange={this.onAlphaChange}
-                disableRipple
-                classes={{
-                  switchBase: classes.iOSSwitchBase,
-                  bar: classes.iOSBar,
-                  icon: classes.iOSIcon,
-                  iconChecked: classes.iOSIconChecked,
-                  checked: classes.iOSChecked
-                }}
-              />
-            }
+          <SwitchOption
+            text="Add Alpha To Color Selection"
+            checked={alpha}
+            onChange={this.onAlphaChange}
           />
-          <FormControlLabel
-            classes={{ root: classes.control }}
-            label={
-              <Typography variant="caption">
-                Color Picker Always On Top
-              </Typography>
-            }
-            labelPlacement="start"
-            control={
-              <Switch
-                checked={pinned}
-                color="primary"
-                onChange={this.onPinnedChange}
-                disableRipple
-                classes={{
-                  switchBase: classes.iOSSwitchBase,
-                  bar: classes.iOSBar,
-                  icon: classes.iOSIcon,
-                  iconChecked: classes.iOSIconChecked,
-                  checked: classes.iOSChecked
-                }}
-              />
-            }
+          <SwitchOption
+            text="Color Picker Always On Top"
+            checked={pinned}
+            onChange={this.onPinnedChange}
           />
+          <div className="outline-color">
+            <Typography variant="caption">
+              Dropper Pixel Outline Color
+            </Typography>
+            <FormControl classes={{ root: classes.outline }}>
+              <Select
+                value={outlineColor}
+                onChange={this.onOutlineChange}
+                input={<Input id="outline-color" disableUnderline />}
+                classes={{ select: classes.select }}
+              >
+                {outlineColors.map((o, i) => (
+                  <MenuItem key={o.label} value={o.color} disableGutters dense>
+                    <Avatar
+                      style={{
+                        width: 10,
+                        height: 10,
+                        backgroundColor: o.color
+                      }}
+                    />
+                    <ListItemText
+                      secondary={o.label}
+                      classes={{ root: classes.listitemText }}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
         </div>
         <div className="bottom">
           <Button className="button" size="small" onClick={this.saveOptions}>
