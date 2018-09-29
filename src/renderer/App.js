@@ -198,7 +198,6 @@ export default class App extends Component {
   }
 
   addNewColor = (color, type) => {
-    console.log(color, type)
     var a, cs, newColor
     const { colors } = this.state
     if (!colors[63].clean) return

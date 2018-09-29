@@ -2,6 +2,8 @@
 
 An Electron application targeted to Windows
 
+![screenshot-1](https://s3-us-west-1.amazonaws.com/benjaminadk/color-picker-1.PNG)
+
 ### Todos
 
 - [x] Add outline color to options - is wired up in state already
