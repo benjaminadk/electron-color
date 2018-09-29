@@ -23,6 +23,7 @@ import Palettes from './components/App/Palettes'
 import PalettePrompt from './components/App/PalettePrompt'
 import ColorPicker from './ColorPicker'
 import Dropper from './Dropper'
+import Documentation from './components/App/Documentation'
 import fs from 'fs'
 import path from 'path'
 import rgbToHsl from 'rgb-to-hsl'
@@ -53,7 +54,8 @@ export default class App extends Component {
       options: { alpha: false, pinned: false, outlineColor: '#FF0000' },
       palettePrompt: false,
       paletteMode: false,
-      palettes: null
+      palettes: null,
+      docsMode: false
     }
   }
 
@@ -117,7 +119,13 @@ export default class App extends Component {
             }
           ]
         },
-        { label: 'Help' }
+        {
+          label: 'Help',
+          submenu: [
+            { label: 'Documentation', click: () => this.enterDocs() },
+            { label: 'About', click: () => {} }
+          ]
+        }
       ]
       mainWin.setMenu(remote.Menu.buildFromTemplate(template))
     }
@@ -248,10 +256,7 @@ export default class App extends Component {
     })
   }
 
-  enterOptions = () =>
-    this.setState({
-      optionsMode: true
-    })
+  enterOptions = () => this.setState({ optionsMode: true, paletteMode: false, docsMode: false })
 
   saveOptions = options => {
     this.setState({ options })
@@ -265,7 +270,7 @@ export default class App extends Component {
       optionsMode: false
     })
 
-  enterPalettes = () => this.setState({ paletteMode: true })
+  enterPalettes = () => this.setState({ paletteMode: true, docsMode: false, optionsMode: false })
 
   openPalettePrompt = () => {
     const { colors, optionsMode, paletteMode } = this.state
@@ -317,6 +322,10 @@ export default class App extends Component {
   }
 
   exitPalettes = () => this.setState({ paletteMode: false })
+
+  enterDocs = () => this.setState({ docsMode: true, paletteMode: false, optionsMode: false })
+
+  exitDocs = () => this.setState({ docsMode: false })
 
   handleSwatchClick = c => {
     if (c === 'none') return
@@ -445,7 +454,8 @@ export default class App extends Component {
       options,
       palettePrompt,
       paletteMode,
-      palettes
+      palettes,
+      docsMode
     } = this.state
     if (windowId === 1) {
       if (optionsMode) {
@@ -468,6 +478,9 @@ export default class App extends Component {
             exitPalettes={this.exitPalettes}
           />
         )
+      }
+      if (docsMode) {
+        return <Documentation />
       }
       return [
         <div
@@ -503,9 +516,7 @@ export default class App extends Component {
         />
       ]
     } else {
-      return (
-        <Dropper width={screenWidth} height={screenHeight} options={options} />
-      )
+      return <Dropper width={screenWidth} height={screenHeight} options={options} />
     }
   }
 }
