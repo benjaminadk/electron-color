@@ -34,7 +34,7 @@ function createMainWindow() {
 }
 
 function setupDevtools() {
-  //if (!inDev) return
+  if (!inDev) return
   const {
     default: installExtension,
     REACT_DEVELOPER_TOOLS

@@ -43,6 +43,7 @@
     "electron-devtools-installer": "^2.2.4",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
-    "rgb-to-hsl": "0.0.3"
+    "rgb-to-hsl": "0.0.3",
+    "source-map-support": "^0.5.9"
   }
 }

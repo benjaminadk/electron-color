@@ -21,7 +21,9 @@ import HSLAtoRGBAorHEXA from '../../utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from '../../utils/copyToClipboard'
 import { DELETE_ICON } from 'common/icon'
 
+const inDev = process.env.NODE_ENV === 'development'
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
+const HEIGHT = inDev ? Math.round(mainHeight - 80) : Math.round(mainHeight - 20)
 
 const styles = theme => ({
   iconButton: {
@@ -36,7 +38,7 @@ const styles = theme => ({
   },
   list: {
     width: Math.round(mainWidth * 0.35),
-    maxHeight: Math.round(mainHeight - 100),
+    maxHeight: HEIGHT,
     borderRight: `1px solid ${theme.palette.divider}`,
     overflowY: 'auto'
   },
@@ -102,7 +104,7 @@ class Palettes extends Component {
     for (let i = 0; i < 64; i++) {
       colors[i] = { color: 'transparent', clean: true }
     }
-    this.setState({ colors })
+    this.setState({ colors, h: 0, s: 0, l: 100, a: 100 })
   }
 
   selectPalette = i => {
@@ -121,7 +123,7 @@ class Palettes extends Component {
   deletePalette = (i, title) => {
     let success = this.props.deletePalette(i, title)
     if (success) {
-      this.initPalettes()
+      setTimeout(() => this.initPalettes(), 500)
     }
   }
 
@@ -177,7 +179,7 @@ class Palettes extends Component {
         className="Palettes"
         style={{
           width: Math.round(mainWidth),
-          height: Math.round(mainHeight)
+          height: HEIGHT
         }}
       >
         <List classes={{ root: classes.list, padding: classes.listPadding }}>
@@ -223,7 +225,13 @@ class Palettes extends Component {
               </ListItem>
             ))}
         </List>
-        <div className="right" style={{ width: Math.round(mainWidth * 0.65) }}>
+        <div
+          className="right"
+          style={{
+            width: Math.round(mainWidth * 0.65),
+            height: HEIGHT
+          }}
+        >
           <ColorGrid
             colors={colors}
             handleContextMenu={this.handleContextMenu}

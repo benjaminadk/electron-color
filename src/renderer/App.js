@@ -30,6 +30,7 @@ import rgbToHsl from 'rgb-to-hsl'
 const inDev = process.env.NODE_ENV === 'development'
 const [screenWidth, screenHeight] = getScreen()
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
+const HEIGHT = inDev ? mainHeight - 90 : mainHeight - 50
 const PALETTES_PATH = path.resolve(__static, 'palettes.json')
 const COLORS_PATH = path.resolve(__static, 'colors.json')
 const OPTIONS_PATH = path.resolve(__static, 'options.json')
@@ -309,8 +310,10 @@ export default class App extends Component {
       fs.writeFile(PALETTES_PATH, JSON.stringify(newPalettes), error => {
         if (error) throw error
       })
+      return true
+    } else {
+      return false
     }
-    return confirmed
   }
 
   exitPalettes = () => this.setState({ paletteMode: false })
@@ -467,7 +470,14 @@ export default class App extends Component {
         )
       }
       return [
-        <div key="main" style={{ height: mainHeight, marginTop: 10 }}>
+        <div
+          key="main"
+          className="Main"
+          style={{
+            height: HEIGHT,
+            width: mainWidth
+          }}
+        >
           <ColorPicker
             h={h}
             s={s}

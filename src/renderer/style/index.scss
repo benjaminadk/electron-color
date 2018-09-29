@@ -17,6 +17,11 @@ body {
   overflow: hidden;
 }
 
+.Main {
+  display: flex;
+  align-items: center;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

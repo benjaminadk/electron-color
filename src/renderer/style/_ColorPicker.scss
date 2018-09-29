@@ -1,4 +1,5 @@
 .ColorPicker {
+  width: 100%;
   margin-left: 20px;
 
   .cp-upper {
@@ -12,7 +13,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    margin-top: $vertical-spacing;
+    margin-bottom: $vertical-spacing;
     cursor: pointer;
     border: $classic-border;
 
@@ -24,6 +25,10 @@
       border: $classic-border;
       border-radius: 50%;
     }
+  }
+
+  .bar:last-child {
+    margin-bottom: 0;
   }
 
   .stats {
