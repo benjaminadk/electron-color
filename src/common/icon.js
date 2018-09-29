@@ -13,3 +13,13 @@ export const TETRADIC_ICON = path.join(__static, '/tetradic-icon-16.png')
 export const ANALOGOUS_ICON = path.join(__static, '/analogous-icon-16.png')
 
 export const MONO_ICON = path.join(__static, '/mono-icon-16.png')
+
+export const DROPPER_ICON = path.join(__static, '/dropper.png')
+
+export const SAVE_ICON = path.join(__static, '/save.png')
+
+export const PALETTE_ICON = path.join(__static, '/palette.png')
+
+export const DELETE_ICON = path.join(__static, '/delete.png')
+
+export const SETTINGS_ICON = path.join(__static, '/settings.png')

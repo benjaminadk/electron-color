@@ -2,7 +2,6 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
 const styles = theme => ({

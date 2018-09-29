@@ -276,6 +276,9 @@ class ColorPicker extends Component {
       handleContextMenu,
       handleSwatchClick,
       enterOptions,
+      enterPalettes,
+      enterDropper,
+      savePalette,
       resetSavedColors,
       classes
     } = this.props
@@ -375,6 +378,9 @@ class ColorPicker extends Component {
         <MainActions
           addNewColor={this.addNewColor}
           enterOptions={enterOptions}
+          enterPalettes={enterPalettes}
+          enterDropper={enterDropper}
+          savePalette={savePalette}
           resetSavedColors={resetSavedColors}
         />
       </div>

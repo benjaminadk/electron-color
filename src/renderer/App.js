@@ -11,7 +11,12 @@ import {
   TRIADIC_ICON,
   TETRADIC_ICON,
   ANALOGOUS_ICON,
-  MONO_ICON
+  MONO_ICON,
+  DROPPER_ICON,
+  SAVE_ICON,
+  PALETTE_ICON,
+  DELETE_ICON,
+  SETTINGS_ICON
 } from 'common/icon'
 import Options from './components/App/Options'
 import Palettes from './components/App/Palettes'
@@ -71,7 +76,11 @@ export default class App extends Component {
         {
           label: 'File',
           submenu: [
-            { label: 'Options', click: () => this.enterOptions() },
+            {
+              label: 'Options',
+              click: () => this.enterOptions(),
+              icon: SETTINGS_ICON
+            },
             { type: 'separator' },
             { role: 'quit' }
           ]
@@ -81,19 +90,31 @@ export default class App extends Component {
           submenu: [
             {
               label: 'Save Current Palette',
-              click: () => this.openPalettePrompt()
+              click: () => this.openPalettePrompt(),
+              icon: SAVE_ICON
             },
-            { label: 'View Saved Palettes', click: () => this.enterPalettes() },
+            {
+              label: 'View Saved Palettes',
+              click: () => this.enterPalettes(),
+              icon: PALETTE_ICON
+            },
             { type: 'separator' },
             {
               label: 'Clear Current Palette',
-              click: () => this.resetSavedColors()
+              click: () => this.resetSavedColors(),
+              icon: DELETE_ICON
             }
           ]
         },
         {
           label: 'Dropper',
-          submenu: [{ label: 'Open', click: () => this.initDropper() }]
+          submenu: [
+            {
+              label: 'Open Dropper',
+              click: () => this.initDropper(),
+              icon: DROPPER_ICON
+            }
+          ]
         },
         { label: 'Help' }
       ]
@@ -168,6 +189,7 @@ export default class App extends Component {
   }
 
   addNewColor = (color, type) => {
+    console.log(color, type)
     var a, cs, newColor
     const { colors } = this.state
     if (!colors[63].clean) return
@@ -179,10 +201,10 @@ export default class App extends Component {
       var l = Math.round(parseInt(hsl[2]), 10)
       if (hsl.length > 3) {
         a = parseInt(hsl[3], 10)
-        cs = toHSLString(false, h, s, l, a)
+        cs = toHSLString(true, h, s, l, a)
       } else {
         a = 100
-        cs = toHSLString(true, h, s, l)
+        cs = toHSLString(false, h, s, l)
       }
       newColor = { color: cs, clean: false }
     } else {
@@ -288,6 +310,7 @@ export default class App extends Component {
         if (error) throw error
       })
     }
+    return confirmed
   }
 
   exitPalettes = () => this.setState({ paletteMode: false })
@@ -335,7 +358,11 @@ export default class App extends Component {
         icon: MONO_ICON
       },
       { type: 'separator' },
-      { label: 'Delete Color', click: () => this.deleteColor(i) }
+      {
+        label: 'Delete Color',
+        click: () => this.deleteColor(i),
+        icon: DELETE_ICON
+      }
     ]
     const menu = remote.Menu.buildFromTemplate(template)
     menu.popup({ window: remote.getCurrentWindow() })
@@ -452,6 +479,9 @@ export default class App extends Component {
             handleSwatchClick={this.handleSwatchClick}
             addNewColor={this.addNewColor}
             enterOptions={this.enterOptions}
+            enterPalettes={this.enterPalettes}
+            enterDropper={this.initDropper}
+            savePalette={this.openPalettePrompt}
             resetSavedColors={this.resetSavedColors}
           />
         </div>,

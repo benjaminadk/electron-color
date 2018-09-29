@@ -15,6 +15,7 @@ function createMainWindow() {
     height,
     x,
     y,
+    useContentSize: true,
     resizable: false,
     maximizable: false,
     icon: MAIN_ICON,

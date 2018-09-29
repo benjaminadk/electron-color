@@ -19,6 +19,7 @@ import toHSLString from '../../utils/toHSLString'
 import HSLtoRGBorHEX from '../../utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from '../../utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from '../../utils/copyToClipboard'
+import { DELETE_ICON } from 'common/icon'
 
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
 
@@ -88,6 +89,10 @@ class Palettes extends Component {
   }
 
   componentWillMount() {
+    this.initPalettes()
+  }
+
+  initPalettes = () => {
     const { palettes } = this.props
     palettes.length ? this.selectPalette(0) : this.resetColors()
   }
@@ -114,9 +119,10 @@ class Palettes extends Component {
   }
 
   deletePalette = (i, title) => {
-    this.props.deletePalette(i, title)
-    this.resetColors()
-    this.setState({ selectedIndex: null })
+    let success = this.props.deletePalette(i, title)
+    if (success) {
+      this.initPalettes()
+    }
   }
 
   deleteColor = i => {
@@ -131,7 +137,11 @@ class Palettes extends Component {
     e.preventDefault()
     if (c.clean) return
     const template = [
-      { label: 'Delete Color', click: () => this.deleteColor(i) }
+      {
+        label: 'Delete Color',
+        click: () => this.deleteColor(i),
+        icon: DELETE_ICON
+      }
     ]
     const menu = remote.Menu.buildFromTemplate(template)
     menu.popup({ window: remote.getCurrentWindow() })
