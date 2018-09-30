@@ -5,21 +5,7 @@ import getMainWinDimens from 'common/getMainWinDimens'
 import toHSLString from './utils/toHSLString'
 import toHSLParts from './utils/toHSLParts'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
-import {
-  MAIN_ICON,
-  COMP_ICON,
-  SPLIT_ICON,
-  TRIADIC_ICON,
-  TETRADIC_ICON,
-  ANALOGOUS_ICON,
-  MONO_ICON,
-  DROPPER_ICON,
-  SAVE_ICON,
-  PALETTE_ICON,
-  DELETE_ICON,
-  SETTINGS_ICON,
-  HELP_ICON
-} from 'common/icons'
+import icons from 'common/icons'
 import Options from './components/App/Options'
 import Palettes from './components/App/Palettes'
 import PalettePrompt from './components/App/PalettePrompt'
@@ -55,7 +41,7 @@ export default class App extends Component {
       a: null,
       colors: null,
       optionsMode: false,
-      options: { alpha: false, pinned: false, outlineColor: '#FF0000' },
+      options: { alpha: false, pinned: false, helpers: false, outlineColor: '#FF0000' },
       palettePrompt: false,
       paletteMode: false,
       palettes: null,
@@ -88,7 +74,7 @@ export default class App extends Component {
             {
               label: 'Options',
               click: () => this.enterOptions(),
-              icon: SETTINGS_ICON
+              icon: icons.SETTINGS_ICON
             },
             { type: 'separator' },
             { role: 'quit' }
@@ -100,29 +86,31 @@ export default class App extends Component {
             {
               label: 'Save Current Palette',
               click: () => this.openPalettePrompt(),
-              icon: SAVE_ICON
+              icon: icons.SAVE_ICON
             },
             {
               label: 'View Saved Palettes',
               click: () => this.enterPalettes(),
-              icon: PALETTE_ICON
+              icon: icons.PALETTE_ICON
             },
             { type: 'separator' },
             {
               label: 'Clear Current Palette',
               click: () => this.openConfirmPrompt(),
-              icon: DELETE_ICON
+              icon: icons.DELETE_ICON
             }
           ]
         },
         {
           label: 'Dropper',
-          submenu: [{ label: 'Open Dropper', click: () => this.initDropper(), icon: DROPPER_ICON }]
+          submenu: [
+            { label: 'Open Dropper', click: () => this.initDropper(), icon: icons.DROPPER_ICON }
+          ]
         },
         {
           label: 'Help',
           submenu: [
-            { label: 'Documentation', click: () => this.enterDocs(), icon: HELP_ICON },
+            { label: 'Documentation', click: () => this.enterDocs(), icon: icons.HELP_ICON },
             { label: 'About', click: () => {} }
           ]
         }
@@ -341,38 +329,38 @@ export default class App extends Component {
       {
         label: 'Complementary',
         click: () => this.makeCompColor(c, i),
-        icon: COMP_ICON
+        icon: icons.COMP_ICON
       },
       {
         label: 'Split Complementary',
         click: () => this.makeSplitCompColor(c, i),
-        icon: SPLIT_ICON
+        icon: icons.SPLIT_ICON
       },
       {
         label: 'Triadic',
         click: () => this.makeTriadicColor(c, i),
-        icon: TRIADIC_ICON
+        icon: icons.TRIADIC_ICON
       },
       {
         label: 'Tetradic',
         click: () => this.makeTetradic(c, i),
-        icon: TETRADIC_ICON
+        icon: icons.TETRADIC_ICON
       },
       {
         label: 'Analagous',
         click: () => this.makeAnalogous(c, i),
-        icon: ANALOGOUS_ICON
+        icon: icons.ANALOGOUS_ICON
       },
       {
         label: 'Monochromatic',
         click: () => this.makeMonochromeColor(c, i),
-        icon: MONO_ICON
+        icon: icons.MONO_ICON
       },
       { type: 'separator' },
       {
         label: 'Delete Color',
         click: () => this.deleteColor(i),
-        icon: DELETE_ICON
+        icon: icons.DELETE_ICON
       }
     ]
     const menu = remote.Menu.buildFromTemplate(template)

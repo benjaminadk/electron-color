@@ -12,7 +12,8 @@ import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from './utils/copyToClipboard'
 import toHSLString from './utils/toHSLString'
-import { ADD_ICON } from 'common/icons'
+import icons from 'common/icons'
+import tooltips from 'common/tooltips'
 
 const BAR_HEIGHT = 16
 const BAR_WIDTH = 360
@@ -82,7 +83,7 @@ class ColorPicker extends Component {
       new remote.MenuItem({
         label: 'Save Color',
         click: () => this.addNewColor(),
-        icon: ADD_ICON
+        icon: icons.ADD_ICON
       })
     )
   }
@@ -267,7 +268,7 @@ class ColorPicker extends Component {
     const { hue, hueLeft, sat, satLeft, lit, litLeft, opa, opaLeft, copied } = this.state
     const {
       colors,
-      options: { alpha },
+      options: { alpha, helpers },
       handleContextMenu,
       handleSwatchClick,
       enterOptions,
@@ -288,17 +289,17 @@ class ColorPicker extends Component {
       <div className="ColorPicker">
         <div className="cp-upper">
           <div>
-            <ColorBar barRef={this.hue} thumbRef={this.hueThumb} title="Hue" left={hueLeft} />
-            <ColorBar
-              barRef={this.sat}
-              thumbRef={this.satThumb}
-              title="Saturation"
-              left={satLeft}
-            />
-            <ColorBar barRef={this.lit} thumbRef={this.litThumb} title="Lightness" left={litLeft} />
+            <ColorBar barRef={this.hue} thumbRef={this.hueThumb} helpers={helpers} left={hueLeft} />
+            <ColorBar barRef={this.sat} thumbRef={this.satThumb} helpers={helpers} left={satLeft} />
+            <ColorBar barRef={this.lit} thumbRef={this.litThumb} helpers={helpers} left={litLeft} />
             <Collapse in={alpha} classes={{ entered: classes.collapse }}>
               <div>
-                <ColorBar barRef={this.opa} thumbRef={this.opaThumb} title="Alpha" left={opaLeft} />
+                <ColorBar
+                  barRef={this.opa}
+                  thumbRef={this.opaThumb}
+                  helpers={helpers}
+                  left={opaLeft}
+                />
               </div>
             </Collapse>
             <div className="stats" style={{ marginTop: 10 }}>

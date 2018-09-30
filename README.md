@@ -24,7 +24,12 @@ An Electron application targeted to Windows
 - [x] Add arrows or wheel listener to adjust H,S,L,A in color picker
 - [ ] Add UI to show full palette when adding 65th color
 - [ ] Remove title tooltips
+  - [x] Color Bars
+  - [ ] Color Tiles
 - [ ] Build Help Component
+- [ ] Helper Tooltip Option
+  - [x] Wire up option
+  - [ ] Implement helper tooltips
 
 ### Troubleshooting Build Process
 

@@ -20,7 +20,7 @@ import toHSLString from '../../utils/toHSLString'
 import HSLtoRGBorHEX from '../../utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from '../../utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from '../../utils/copyToClipboard'
-import { DELETE_ICON } from 'common/icons'
+import icons from 'common/icons'
 
 const inDev = process.env.NODE_ENV === 'development'
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
@@ -153,7 +153,7 @@ class Palettes extends Component {
       {
         label: 'Delete Color',
         click: () => this.deleteColor(i),
-        icon: DELETE_ICON
+        icon: icons.DELETE_ICON
       }
     ]
     const menu = remote.Menu.buildFromTemplate(template)

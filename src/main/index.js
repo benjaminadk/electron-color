@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import getMainWinDimens from 'common/getMainWinDimens'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
-import { MAIN_ICON } from 'common/icons'
+import icons from 'common/icons'
 
 let mainWin
 
@@ -18,8 +18,8 @@ function createMainWindow() {
     useContentSize: true,
     resizable: false,
     maximizable: false,
-    icon: MAIN_ICON,
-    title: 'HSL Color Picker'
+    icon: icons.MAIN_ICON,
+    title: 'Color Tool'
   })
 
   mainWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
