@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import { remote, desktopCapturer } from 'electron'
 import IconBar from './components/Dropper/IconBar'
 import ColorOutput from './components/Dropper/ColorOutput'
@@ -120,28 +119,20 @@ export default class Dropper extends Component {
     let a = (p[3] / 255).toFixed(2)
     this.setState({
       color:
-        a === '1.00'
-          ? `rgb(${p[0]}, ${p[1]}, ${p[2]})`
-          : `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${a})`
+        a === '1.00' ? `rgb(${p[0]}, ${p[1]}, ${p[2]})` : `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${a})`
     })
   }
 
   selectPixelMove = () => {
     const { boxIndex } = this.state
     if (!boxIndex) return
-    let x = Math.ceil(
-      document.querySelector(`[data-index='${boxIndex}']`).offsetLeft / 10
-    )
-    let y = Math.ceil(
-      document.querySelector(`[data-index='${boxIndex}']`).offsetTop / 10
-    )
+    let x = Math.ceil(document.querySelector(`[data-index='${boxIndex}']`).offsetLeft / 10)
+    let y = Math.ceil(document.querySelector(`[data-index='${boxIndex}']`).offsetTop / 10)
     let p = this.ctx3.getImageData(x, y, 1, 1).data
     let a = (p[3] / 255).toFixed(2)
     this.setState({
       color:
-        a === '1.00'
-          ? `rgb(${p[0]}, ${p[1]}, ${p[2]})`
-          : `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${a})`
+        a === '1.00' ? `rgb(${p[0]}, ${p[1]}, ${p[2]})` : `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${a})`
     })
   }
 
@@ -268,11 +259,7 @@ export default class Dropper extends Component {
         onMouseMove={this.handleMouseMoveMain}
       >
         <div className="drop-window">
-          <IconBar
-            selectColor={this.selectColor}
-            refresh={this.refresh}
-            exit={this.exit}
-          />
+          <IconBar selectColor={this.selectColor} refresh={this.refresh} exit={this.exit} />
           <CanvasStack
             c1Ref={this.c1}
             c2Ref={this.c2}

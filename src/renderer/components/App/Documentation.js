@@ -42,7 +42,7 @@ function Documentation({ height, exitDocs, classes }) {
         </Typography>
       </div>
       <div className="hsl-chart">
-        <img src={HSL_IMG} />
+        <img src={HSL_IMG} height={50} width={50} />
       </div>
       <Typography variant="headline" className="header">
         The HSL Color Model

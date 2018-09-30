@@ -1,6 +1,6 @@
 import path from 'path'
 
-export const MAIN_ICON = path.join(__static, '/picker-icon.ico')
+export const MAIN_ICON = path.join(__static, '/picker-icon-1.ico')
 
 export const COMP_ICON = path.join(__static, '/comp-icon-16.png')
 

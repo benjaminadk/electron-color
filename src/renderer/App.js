@@ -6,6 +6,7 @@ import toHSLString from './utils/toHSLString'
 import toHSLParts from './utils/toHSLParts'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
 import {
+  MAIN_ICON,
   COMP_ICON,
   SPLIT_ICON,
   TRIADIC_ICON,
@@ -183,7 +184,8 @@ export default class App extends Component {
       height: screenHeight,
       frame: false,
       transparent: true,
-      alwaysOnTop: true
+      alwaysOnTop: true,
+      icon: MAIN_ICON
     })
     //dropperWin.webContents.openDevTools({ mode: 'bottom' })
     dropperWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
