@@ -17,8 +17,7 @@ An Electron application targeted to Windows
 - [x] Adjust spacing for hidden opacity bar - temp solution is margin top on stat inputs changes with alpha state
 - [ ] Error messages for fs errors???
 - [ ] Change native electron dialog (discard color) to Material-UI style to match palette dialog
-  - [ ] When deleting color tile
-  - [ ] When deleting color palette
+  - [x] When deleting color palette
 - [x] Add right click context menu for deleting single color square
 - [x] Add complementary and other quick color generators with math
 - [x] Remove `type` property from all colors - added auto convert to dropper

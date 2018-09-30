@@ -13,6 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import LoadIcon from '@material-ui/icons/Apps'
 import ColorGrid from '../ColorPicker/ColorGrid'
 import StatOutput from '../ColorPicker/StatOutput'
+import ConfirmPrompt from './ConfirmPrompt'
 import getMainWinDimens from 'common/getMainWinDimens'
 import toHSLParts from '../../utils/toHSLParts'
 import toHSLString from '../../utils/toHSLString'
@@ -86,7 +87,10 @@ class Palettes extends Component {
       s: 0,
       l: 100,
       a: 100,
-      copied: false
+      copied: false,
+      confirmPrompt: false,
+      confirmIndex: null,
+      confirmTitle: ''
     }
   }
 
@@ -120,12 +124,19 @@ class Palettes extends Component {
     this.props.loadPalette(selectedIndex)
   }
 
-  deletePalette = (i, title) => {
-    let success = this.props.deletePalette(i, title)
-    if (success) {
-      setTimeout(() => this.initPalettes(), 500)
-    }
+  deletePalette = () => {
+    const { confirmIndex } = this.state
+    this.props.deletePalette(confirmIndex)
+    setTimeout(() => {
+      this.setState({ confirmIndex: null, confirmTitle: '', confirmPrompt: false })
+      this.initPalettes()
+    }, 250)
   }
+
+  openConfirmPrompt = (i, title) =>
+    this.setState({ confirmPrompt: true, confirmIndex: i, confirmTitle: title })
+
+  closeConfirmPrompt = () => this.setState({ confirmPrompt: false })
 
   deleteColor = i => {
     const { colors, selectedIndex } = this.state
@@ -167,15 +178,16 @@ class Palettes extends Component {
       options: { alpha },
       classes
     } = this.props
-    const { selectedIndex, colors, h, s, l, a, copied } = this.state
+    const { selectedIndex, colors, h, s, l, a, copied, confirmPrompt, confirmTitle } = this.state
     const hsl = toHSLString(false, h, s, l, a)
     const hsla = toHSLString(true, h, s, l, a)
     const rgb = HSLtoRGBorHEX(h, s, l, true)
     const rgba = HSLAtoRGBAorHEXA(h, s, l, a, true)
     const hex = HSLtoRGBorHEX(h, s, l, false)
     const hexa = HSLAtoRGBAorHEXA(h, s, l, a, false)
-    return (
+    return [
       <div
+        key="palettes"
         className="Palettes"
         style={{
           width: Math.round(mainWidth),
@@ -210,7 +222,7 @@ class Palettes extends Component {
                     <LoadIcon fontSize="inherit" />
                   </IconButton>
                   <IconButton
-                    onClick={() => this.deletePalette(i, p.title)}
+                    onClick={() => this.openConfirmPrompt(i, p.title)}
                     classes={{ root: classes.iconButton }}
                   >
                     <DeleteIcon fontSize="inherit" />
@@ -246,8 +258,16 @@ class Palettes extends Component {
             />
           </div>
         </div>
-      </div>
-    )
+      </div>,
+      <ConfirmPrompt
+        key="delete-palette"
+        open={confirmPrompt}
+        title="Delete Palette"
+        message={`Delete Palette:  ${confirmTitle}`}
+        onOkay={this.deletePalette}
+        onClose={this.closeConfirmPrompt}
+      />
+    ]
   }
 }
 

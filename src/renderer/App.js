@@ -309,19 +309,13 @@ export default class App extends Component {
     })
   }
 
-  deletePalette = (i, title) => {
-    let confirmed = confirm(`Delete Palette: ${title}`)
-    if (confirmed) {
-      const { palettes } = this.state
-      let newPalettes = palettes.filter((p, index) => i !== index)
-      this.setState({ palettes: newPalettes })
-      fs.writeFile(PALETTES_PATH, JSON.stringify(newPalettes), error => {
-        if (error) throw error
-      })
-      return true
-    } else {
-      return false
-    }
+  deletePalette = i => {
+    const { palettes } = this.state
+    let newPalettes = palettes.filter((p, index) => i !== index)
+    this.setState({ palettes: newPalettes })
+    fs.writeFile(PALETTES_PATH, JSON.stringify(newPalettes), error => {
+      if (error) throw error
+    })
   }
 
   exitPalettes = () => this.setState({ paletteMode: false })
