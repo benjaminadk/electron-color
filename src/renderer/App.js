@@ -16,11 +16,13 @@ import {
   SAVE_ICON,
   PALETTE_ICON,
   DELETE_ICON,
-  SETTINGS_ICON
-} from 'common/icon'
+  SETTINGS_ICON,
+  HELP_ICON
+} from 'common/icons'
 import Options from './components/App/Options'
 import Palettes from './components/App/Palettes'
 import PalettePrompt from './components/App/PalettePrompt'
+import ConfirmPrompt from './components/App/ConfirmPrompt'
 import ColorPicker from './ColorPicker'
 import Dropper from './Dropper'
 import Documentation from './components/App/Documentation'
@@ -31,12 +33,13 @@ import rgbToHsl from 'rgb-to-hsl'
 const inDev = process.env.NODE_ENV === 'development'
 const [screenWidth, screenHeight] = getScreen()
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
-const HEIGHT = inDev ? mainHeight - 90 : mainHeight - 50
+const HEIGHT = inDev ? mainHeight - 80 : mainHeight - 50
 const PALETTES_PATH = path.resolve(__static, 'palettes.json')
 const COLORS_PATH = path.resolve(__static, 'colors.json')
 const OPTIONS_PATH = path.resolve(__static, 'options.json')
 
 var mainWin = remote.BrowserWindow.fromId(1)
+var mainMenu
 var dropperWin
 
 export default class App extends Component {
@@ -55,7 +58,9 @@ export default class App extends Component {
       palettePrompt: false,
       paletteMode: false,
       palettes: null,
-      docsMode: false
+      loadedTitle: '',
+      docsMode: false,
+      confirmPrompt: false
     }
   }
 
@@ -104,30 +109,25 @@ export default class App extends Component {
             { type: 'separator' },
             {
               label: 'Clear Current Palette',
-              click: () => this.resetSavedColors(),
+              click: () => this.openConfirmPrompt(),
               icon: DELETE_ICON
             }
           ]
         },
         {
           label: 'Dropper',
-          submenu: [
-            {
-              label: 'Open Dropper',
-              click: () => this.initDropper(),
-              icon: DROPPER_ICON
-            }
-          ]
+          submenu: [{ label: 'Open Dropper', click: () => this.initDropper(), icon: DROPPER_ICON }]
         },
         {
           label: 'Help',
           submenu: [
-            { label: 'Documentation', click: () => this.enterDocs() },
+            { label: 'Documentation', click: () => this.enterDocs(), icon: HELP_ICON },
             { label: 'About', click: () => {} }
           ]
         }
       ]
-      mainWin.setMenu(remote.Menu.buildFromTemplate(template))
+      mainMenu = remote.Menu.buildFromTemplate(template)
+      mainWin.setMenu(mainMenu)
     }
   }
 
@@ -177,9 +177,7 @@ export default class App extends Component {
       color && this.addNewColor(color, 'rgb')
       mainWin.show()
     })
-
     mainWin.hide()
-
     dropperWin = new remote.BrowserWindow({
       width: screenWidth,
       height: screenHeight,
@@ -187,11 +185,8 @@ export default class App extends Component {
       transparent: true,
       alwaysOnTop: true
     })
-
     //dropperWin.webContents.openDevTools({ mode: 'bottom' })
-
     dropperWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
-
     dropperWin.on('close', () => {
       dropperWin = null
     })
@@ -238,10 +233,8 @@ export default class App extends Component {
   }
 
   resetSavedColors = () => {
-    let confirmed = confirm(`Discard ALL Saved Colors? This CANNOT be undone!`)
-    if (confirmed) {
-      this.overwriteColors()
-    }
+    this.overwriteColors()
+    this.setState({ loadedTitle: '', confirmPrompt: false })
   }
 
   overwriteColors = () => {
@@ -264,10 +257,14 @@ export default class App extends Component {
     })
   }
 
-  exitOptions = () =>
-    this.setState({
-      optionsMode: false
-    })
+  exitOptions = () => this.setState({ optionsMode: false })
+
+  openConfirmPrompt = () => {
+    if (this.state.colors[0].clean) return
+    this.setState({ confirmPrompt: true })
+  }
+
+  closeConfirmPrompt = () => this.setState({ confirmPrompt: false })
 
   enterPalettes = () => this.setState({ paletteMode: true, docsMode: false, optionsMode: false })
 
@@ -303,7 +300,14 @@ export default class App extends Component {
     })
   }
 
-  loadPalette = colors => this.setState({ colors, paletteMode: false })
+  loadPalette = i => {
+    const { palettes } = this.state
+    this.setState({
+      colors: palettes[i].colors,
+      loadedTitle: palettes[i].title,
+      paletteMode: false
+    })
+  }
 
   deletePalette = (i, title) => {
     let confirmed = confirm(`Delete Palette: ${title}`)
@@ -454,7 +458,9 @@ export default class App extends Component {
       palettePrompt,
       paletteMode,
       palettes,
-      docsMode
+      loadedTitle,
+      docsMode,
+      confirmPrompt
     } = this.state
     if (windowId === 1) {
       if (optionsMode) {
@@ -479,7 +485,7 @@ export default class App extends Component {
         )
       }
       if (docsMode) {
-        return <Documentation />
+        return <Documentation height={HEIGHT} exitDocs={this.exitDocs} />
       }
       return [
         <div
@@ -491,6 +497,7 @@ export default class App extends Component {
           }}
         >
           <ColorPicker
+            mainMenu={mainMenu}
             h={h}
             s={s}
             l={l}
@@ -503,15 +510,25 @@ export default class App extends Component {
             enterOptions={this.enterOptions}
             enterPalettes={this.enterPalettes}
             enterDropper={this.initDropper}
+            enterDocs={this.enterDocs}
             savePalette={this.openPalettePrompt}
-            resetSavedColors={this.resetSavedColors}
+            resetSavedColors={this.openConfirmPrompt}
           />
         </div>,
         <PalettePrompt
-          key="prompt"
+          key="save-palette"
           open={palettePrompt}
+          loadedTitle={loadedTitle}
           onClose={this.closePalettePrompt}
           savePalette={this.savePalette}
+        />,
+        <ConfirmPrompt
+          key="delete-saved-colors"
+          open={confirmPrompt}
+          title="Clear Palette"
+          message="Delete All Colors From Palette?"
+          onOkay={this.resetSavedColors}
+          onClose={this.closeConfirmPrompt}
         />
       ]
     } else {

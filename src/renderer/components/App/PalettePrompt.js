@@ -9,29 +9,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
 const styles = theme => ({
-  dialog: {
-    width: '50%',
-    borderRadius: 0,
-    boxShadow: theme.shadows[1],
-    border: `1px solid ${theme.palette.primary.main}`
-  },
-  dialogTitle: {
-    height: 25,
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.getContrastText(theme.palette.primary.main),
-    padding: 0
-  },
   typoTitle: {
     marginLeft: theme.spacing.unit,
     fontSize: '.7rem'
-  },
-  dialogContent: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: theme.spacing.unit * 2,
-    paddingTop: 10
   },
   outlinedInput: {
     width: 250,
@@ -39,18 +19,6 @@ const styles = theme => ({
   },
   notchedOutline: {
     borderRadius: 0
-  },
-  button: {
-    borderRadius: 0,
-    boxShadow: 'none',
-    backgroundColor: theme.palette.background.default,
-    color: 'black',
-    outline: '1px outset rgb(206, 206, 206)',
-    fontSize: '.8rem',
-    '&:hover': {
-      backgroundColor: theme.palette.background.default,
-      outline: '2px outset rgb(206, 206, 206)'
-    }
   }
 })
 
@@ -63,7 +31,19 @@ class PalettePrompt extends Component {
     }
   }
 
+  componentWillMount() {
+    const { loadedTitle } = this.props
+    loadedTitle.length && this.setState({ title: loadedTitle })
+  }
+
   handleChange = e => this.setState({ title: e.target.value })
+
+  handleKeyDown = e => {
+    if (!this.state.title) return
+    if (e.keyCode === 13) {
+      this.savePalette()
+    }
+  }
 
   savePalette = () => {
     const { title } = this.state
@@ -76,28 +56,18 @@ class PalettePrompt extends Component {
     const { open, onClose, classes } = this.props
     const { title } = this.state
     return (
-      <Dialog
-        open={open}
-        onClose={onClose}
-        BackdropProps={{ invisible: true }}
-        disableBackdropClick
-        disableEscapeKeyDown
-        classes={{ paper: classes.dialog }}
-      >
-        <DialogTitle classes={{ root: classes.dialogTitle }} disableTypography>
-          <Typography
-            variant="caption"
-            color="inherit"
-            classes={{ root: classes.typoTitle }}
-          >
+      <Dialog open={open} onClose={onClose}>
+        <DialogTitle disableTypography>
+          <Typography variant="caption" color="inherit" classes={{ root: classes.typoTitle }}>
             Save Palette
           </Typography>
         </DialogTitle>
-        <DialogContent classes={{ root: classes.dialogContent }}>
+        <DialogContent>
           <TextField
             variant="outlined"
             value={title}
             onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
             label="Enter Palette Title"
             autoFocus
             InputProps={{
@@ -110,21 +80,10 @@ class PalettePrompt extends Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button
-            disabled={!title}
-            classes={{ root: classes.button }}
-            onClick={this.savePalette}
-            disableRipple
-          >
+          <Button disabled={!title} onClick={this.savePalette}>
             Save
           </Button>
-          <Button
-            classes={{ root: classes.button }}
-            onClick={onClose}
-            disableRipple
-          >
-            Cancel
-          </Button>
+          <Button onClick={onClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
     )

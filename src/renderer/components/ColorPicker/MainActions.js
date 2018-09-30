@@ -7,6 +7,7 @@ import PaletteIcon from '@material-ui/icons/Palette'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DropperIcon from '@material-ui/icons/Colorize'
 import SaveIcon from '@material-ui/icons/Save'
+import HelpIcon from '@material-ui/icons/Help'
 
 const styles = theme => ({
   button: {
@@ -27,6 +28,7 @@ class MainActions extends Component {
       enterOptions,
       enterPalettes,
       enterDropper,
+      enterDocs,
       savePalette,
       resetSavedColors,
       classes
@@ -37,7 +39,8 @@ class MainActions extends Component {
       { text: 'Save Palette', icon: <SaveIcon />, click: savePalette },
       { text: 'View Palettes', icon: <PaletteIcon />, click: enterPalettes },
       { text: 'Clear Palette', icon: <DeleteIcon />, click: resetSavedColors },
-      { text: 'Options', icon: <SettingsIcon />, click: enterOptions }
+      { text: 'Options', icon: <SettingsIcon />, click: enterOptions },
+      { text: 'Documentation', icon: <HelpIcon />, click: enterDocs }
     ]
     return (
       <div className="actions">

@@ -19,7 +19,7 @@ import toHSLString from '../../utils/toHSLString'
 import HSLtoRGBorHEX from '../../utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from '../../utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from '../../utils/copyToClipboard'
-import { DELETE_ICON } from 'common/icon'
+import { DELETE_ICON } from 'common/icons'
 
 const inDev = process.env.NODE_ENV === 'development'
 const [mainWidth, mainHeight, mainX, mainY] = getMainWinDimens()
@@ -115,9 +115,9 @@ class Palettes extends Component {
   }
 
   loadPalette = () => {
-    const { selectedIndex, colors } = this.state
+    const { selectedIndex } = this.state
     if (!Number.isInteger(selectedIndex)) return
-    this.props.loadPalette(colors)
+    this.props.loadPalette(selectedIndex)
   }
 
   deletePalette = (i, title) => {
@@ -184,10 +184,7 @@ class Palettes extends Component {
       >
         <List classes={{ root: classes.list, padding: classes.listPadding }}>
           <ListSubheader disableGutters classes={{ root: classes.subheader }}>
-            <IconButton
-              onClick={exitPalettes}
-              classes={{ root: classes.iconButton }}
-            >
+            <IconButton onClick={exitPalettes} classes={{ root: classes.iconButton }}>
               <BackIcon fontSize="inherit" />
             </IconButton>
             <Typography className={classes.subText}>Palettes</Typography>
@@ -209,10 +206,7 @@ class Palettes extends Component {
               >
                 <ListItemText primary={p.title} />
                 <ListItemSecondaryAction>
-                  <IconButton
-                    onClick={this.loadPalette}
-                    classes={{ root: classes.iconButton }}
-                  >
+                  <IconButton onClick={this.loadPalette} classes={{ root: classes.iconButton }}>
                     <LoadIcon fontSize="inherit" />
                   </IconButton>
                   <IconButton
@@ -238,10 +232,7 @@ class Palettes extends Component {
             handleSwatchClick={this.handleSwatchClick}
           />
           <div className="output">
-            <div
-              className="swatch"
-              style={{ backgroundColor: alpha ? hsla : hsl }}
-            />
+            <div className="swatch" style={{ backgroundColor: alpha ? hsla : hsl }} />
             <StatOutput
               hsl={hsl}
               hsla={hsla}

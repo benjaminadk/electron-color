@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import getMainWinDimens from 'common/getMainWinDimens'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
-import { MAIN_ICON } from 'common/icon'
+import { MAIN_ICON } from 'common/icons'
 
 let mainWin
 

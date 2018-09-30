@@ -23,3 +23,7 @@ export const PALETTE_ICON = path.join(__static, '/palette.png')
 export const DELETE_ICON = path.join(__static, '/delete.png')
 
 export const SETTINGS_ICON = path.join(__static, '/settings.png')
+
+export const HELP_ICON = path.join(__static, '/help.png')
+
+export const ADD_ICON = path.join(__static, '/add.png')

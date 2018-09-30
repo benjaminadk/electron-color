@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { remote } from 'electron'
 import { withStyles } from '@material-ui/core/styles'
 import Collapse from '@material-ui/core/Collapse'
 import ColorBar from './components/ColorPicker/ColorBar'
@@ -11,6 +12,7 @@ import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from './utils/copyToClipboard'
 import toHSLString from './utils/toHSLString'
+import { ADD_ICON } from 'common/icons'
 
 const BAR_HEIGHT = 16
 const BAR_WIDTH = 360
@@ -49,6 +51,10 @@ class ColorPicker extends Component {
     this.opaThumb = React.createRef()
   }
 
+  componentWillMount() {
+    this.addMenuItem()
+  }
+
   componentDidMount() {
     this.createPickerBars()
   }
@@ -64,11 +70,21 @@ class ColorPicker extends Component {
       let litLeft = Math.round(l * 3.6) - 8
       let opa = a
       let opaLeft = Math.round(a * 3.6) - 8
-      this.setState(
-        { hue, hueLeft, sat, satLeft, lit, litLeft, opa, opaLeft },
-        () => this.updatePickerBars()
+      this.setState({ hue, hueLeft, sat, satLeft, lit, litLeft, opa, opaLeft }, () =>
+        this.updatePickerBars()
       )
     }
+  }
+
+  addMenuItem = () => {
+    this.props.mainMenu.items[1].submenu.insert(
+      0,
+      new remote.MenuItem({
+        label: 'Save Color',
+        click: () => this.addNewColor(),
+        icon: ADD_ICON
+      })
+    )
   }
 
   createPickerBars = () => {
@@ -82,8 +98,7 @@ class ColorPicker extends Component {
       this.hue.current.appendChild(slice)
     }
 
-    const onMouseMoveHue = e =>
-      this.setState({ hueLeft: `${this.getPosition(e)}` })
+    const onMouseMoveHue = e => this.setState({ hueLeft: `${this.getPosition(e)}` })
 
     const onMouseUpHue = e => {
       this.setColor(e, 'hue')
@@ -120,8 +135,7 @@ class ColorPicker extends Component {
       this.opa.current.appendChild(slice3)
     }
 
-    const onMouseMoveSat = e =>
-      this.setState({ satLeft: `${this.getPosition(e)}` })
+    const onMouseMoveSat = e => this.setState({ satLeft: `${this.getPosition(e)}` })
 
     const onMouseUpSat = e => {
       this.setColor(e, 'sat')
@@ -135,8 +149,7 @@ class ColorPicker extends Component {
       document.body.addEventListener('mouseup', onMouseUpSat)
     })
 
-    const onMouseMoveLit = e =>
-      this.setState({ litLeft: `${this.getPosition(e)}` })
+    const onMouseMoveLit = e => this.setState({ litLeft: `${this.getPosition(e)}` })
 
     const onMouseUpLit = e => {
       this.setColor(e, 'lit')
@@ -150,8 +163,7 @@ class ColorPicker extends Component {
       document.body.addEventListener('mouseup', onMouseUpLit)
     })
 
-    const onMouseMoveOpa = e =>
-      this.setState({ opaLeft: `${this.getPosition(e)}` })
+    const onMouseMoveOpa = e => this.setState({ opaLeft: `${this.getPosition(e)}` })
 
     const onMouseUpOpa = e => {
       this.setColor(e, 'opa')
@@ -187,10 +199,7 @@ class ColorPicker extends Component {
 
   getPosition = e => {
     let offset = this.hue.current.offsetLeft
-    return Math.max(
-      BAR_HEIGHT * -0.5,
-      Math.min(e.clientX - offset, BAR_WIDTH - BAR_HEIGHT * 0.5)
-    )
+    return Math.max(BAR_HEIGHT * -0.5, Math.min(e.clientX - offset, BAR_WIDTH - BAR_HEIGHT * 0.5))
   }
 
   updatePickerBars = () => {
@@ -212,9 +221,7 @@ class ColorPicker extends Component {
     let offset = BAR_HEIGHT * 0.5
     if (mode === 'hue') {
       if (val > 360) val = 360
-      this.setState({ hue: val, hueLeft: val - offset }, () =>
-        this.updatePickerBars()
-      )
+      this.setState({ hue: val, hueLeft: val - offset }, () => this.updatePickerBars())
     } else {
       if (val > 100) val = 100
       this.setState({
@@ -231,9 +238,7 @@ class ColorPicker extends Component {
     if (val < 0) val = 0
     if (mode === 'hue') {
       if (val > 360) val = 360
-      this.setState({ hue: val, hueLeft: val - offset }, () =>
-        this.updatePickerBars()
-      )
+      this.setState({ hue: val, hueLeft: val - offset }, () => this.updatePickerBars())
     } else {
       if (val > 100) val = 100
       this.setState({
@@ -259,17 +264,7 @@ class ColorPicker extends Component {
   }
 
   render() {
-    const {
-      hue,
-      hueLeft,
-      sat,
-      satLeft,
-      lit,
-      litLeft,
-      opa,
-      opaLeft,
-      copied
-    } = this.state
+    const { hue, hueLeft, sat, satLeft, lit, litLeft, opa, opaLeft, copied } = this.state
     const {
       colors,
       options: { alpha },
@@ -278,6 +273,7 @@ class ColorPicker extends Component {
       enterOptions,
       enterPalettes,
       enterDropper,
+      enterDocs,
       savePalette,
       resetSavedColors,
       classes
@@ -292,32 +288,17 @@ class ColorPicker extends Component {
       <div className="ColorPicker">
         <div className="cp-upper">
           <div>
-            <ColorBar
-              barRef={this.hue}
-              thumbRef={this.hueThumb}
-              title="Hue"
-              left={hueLeft}
-            />
+            <ColorBar barRef={this.hue} thumbRef={this.hueThumb} title="Hue" left={hueLeft} />
             <ColorBar
               barRef={this.sat}
               thumbRef={this.satThumb}
               title="Saturation"
               left={satLeft}
             />
-            <ColorBar
-              barRef={this.lit}
-              thumbRef={this.litThumb}
-              title="Lightness"
-              left={litLeft}
-            />
+            <ColorBar barRef={this.lit} thumbRef={this.litThumb} title="Lightness" left={litLeft} />
             <Collapse in={alpha} classes={{ entered: classes.collapse }}>
               <div>
-                <ColorBar
-                  barRef={this.opa}
-                  thumbRef={this.opaThumb}
-                  title="Alpha"
-                  left={opaLeft}
-                />
+                <ColorBar barRef={this.opa} thumbRef={this.opaThumb} title="Alpha" left={opaLeft} />
               </div>
             </Collapse>
             <div className="stats" style={{ marginTop: 10 }}>
@@ -380,6 +361,7 @@ class ColorPicker extends Component {
           enterOptions={enterOptions}
           enterPalettes={enterPalettes}
           enterDropper={enterDropper}
+          enterDocs={enterDocs}
           savePalette={savePalette}
           resetSavedColors={resetSavedColors}
         />
