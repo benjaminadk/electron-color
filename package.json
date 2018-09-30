@@ -1,5 +1,5 @@
 {
-  "name": "electron-picker-2",
+  "name": "electron-color",
   "version": "1.0.0",
   "description": "An HSL color picker and eye dropper application",
   "main": "./dist/main/main.js",
@@ -15,7 +15,7 @@
   "license": "ISC",
   "build": {
     "appId": "com.electron.hslpicker",
-    "productName": "HSL Color Picker",
+    "productName": "Color Tool",
     "win": {
       "icon": "static/picker-icon.ico",
       "target": [

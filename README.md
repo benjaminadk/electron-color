@@ -1,4 +1,4 @@
-## HSL Color Picker & Eye Dropper
+## Color Tool
 
 An Electron application targeted to Windows
 
@@ -16,7 +16,7 @@ An Electron application targeted to Windows
   - [x] Display stats or more UI in Palettes
 - [x] Adjust spacing for hidden opacity bar - temp solution is margin top on stat inputs changes with alpha state
 - [ ] Error messages for fs errors???
-- [ ] Change native electron dialog (discard color) to Material-UI style to match palette dialog
+- [x] Change native electron dialog (discard color) to Material-UI style to match palette dialog
   - [x] When deleting color palette
 - [x] Add right click context menu for deleting single color square
 - [x] Add complementary and other quick color generators with math
