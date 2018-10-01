@@ -8,7 +8,7 @@
     "dev": "electron-webpack dev",
     "prod": "electron ./dist/main/main.js",
     "compile": "electron-webpack",
-    "dist": "electron-builder"
+    "dist": "electron-builder -p onTag"
   },
   "keywords": [],
   "author": "benjaminadk",
@@ -17,9 +17,7 @@
     "appId": "com.electron.hslpicker",
     "productName": "Color Tool",
     "win": {
-      "publish": {
-        "provider": "github"
-      },
+      "publish": "github",
       "icon": "static/picker-icon.ico",
       "target": [
         "nsis"
