@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { remote, ipcRenderer } from 'electron'
+import { remote, ipcRenderer, shell } from 'electron'
 import getScreen from 'common/getScreen'
 import getMainWinDimens from 'common/getMainWinDimens'
 import toHSLString from './utils/toHSLString'
@@ -12,7 +12,6 @@ import PalettePrompt from './components/App/PalettePrompt'
 import ConfirmPrompt from './components/App/ConfirmPrompt'
 import ColorPicker from './ColorPicker'
 import Dropper from './Dropper'
-import Documentation from './components/App/Documentation'
 import fs from 'fs'
 import path from 'path'
 import rgbToHsl from 'rgb-to-hsl'
@@ -46,7 +45,6 @@ export default class App extends Component {
       paletteMode: false,
       palettes: null,
       loadedTitle: '',
-      docsMode: false,
       confirmPrompt: false
     }
   }
@@ -71,11 +69,7 @@ export default class App extends Component {
         {
           label: 'File',
           submenu: [
-            {
-              label: 'Options',
-              click: () => this.enterOptions(),
-              icon: icons.SETTINGS_ICON
-            },
+            { label: 'Options', click: () => this.enterOptions(), icon: icons.SETTINGS_ICON },
             { type: 'separator' },
             { role: 'quit' }
           ]
@@ -238,7 +232,11 @@ export default class App extends Component {
     })
   }
 
-  enterOptions = () => this.setState({ optionsMode: true, paletteMode: false, docsMode: false })
+  enterOptions = () =>
+    this.setState({
+      optionsMode: true,
+      paletteMode: false
+    })
 
   saveOptions = options => {
     this.setState({ options })
@@ -256,7 +254,11 @@ export default class App extends Component {
 
   closeConfirmPrompt = () => this.setState({ confirmPrompt: false })
 
-  enterPalettes = () => this.setState({ paletteMode: true, docsMode: false, optionsMode: false })
+  enterPalettes = () =>
+    this.setState({
+      paletteMode: true,
+      optionsMode: false
+    })
 
   openPalettePrompt = () => {
     const { colors, optionsMode, paletteMode } = this.state
@@ -310,9 +312,7 @@ export default class App extends Component {
 
   exitPalettes = () => this.setState({ paletteMode: false })
 
-  enterDocs = () => this.setState({ docsMode: true, paletteMode: false, optionsMode: false })
-
-  exitDocs = () => this.setState({ docsMode: false })
+  enterDocs = () => shell.openExternal('https://github.com/benjaminadk/electron-color/wiki')
 
   handleSwatchClick = c => {
     if (c === 'none') return
@@ -326,42 +326,22 @@ export default class App extends Component {
     const template = [
       { label: 'Color Generators', enabled: false },
       { type: 'separator' },
-      {
-        label: 'Complementary',
-        click: () => this.makeCompColor(c, i),
-        icon: icons.COMP_ICON
-      },
+      { label: 'Complementary', click: () => this.makeCompColor(c, i), icon: icons.COMP_ICON },
       {
         label: 'Split Complementary',
         click: () => this.makeSplitCompColor(c, i),
         icon: icons.SPLIT_ICON
       },
-      {
-        label: 'Triadic',
-        click: () => this.makeTriadicColor(c, i),
-        icon: icons.TRIADIC_ICON
-      },
-      {
-        label: 'Tetradic',
-        click: () => this.makeTetradic(c, i),
-        icon: icons.TETRADIC_ICON
-      },
-      {
-        label: 'Analagous',
-        click: () => this.makeAnalogous(c, i),
-        icon: icons.ANALOGOUS_ICON
-      },
+      { label: 'Triadic', click: () => this.makeTriadicColor(c, i), icon: icons.TRIADIC_ICON },
+      { label: 'Tetradic', click: () => this.makeTetradic(c, i), icon: icons.TETRADIC_ICON },
+      { label: 'Analagous', click: () => this.makeAnalogous(c, i), icon: icons.ANALOGOUS_ICON },
       {
         label: 'Monochromatic',
         click: () => this.makeMonochromeColor(c, i),
         icon: icons.MONO_ICON
       },
       { type: 'separator' },
-      {
-        label: 'Delete Color',
-        click: () => this.deleteColor(i),
-        icon: icons.DELETE_ICON
-      }
+      { label: 'Delete Color', click: () => this.deleteColor(i), icon: icons.DELETE_ICON }
     ]
     const menu = remote.Menu.buildFromTemplate(template)
     menu.popup({ window: remote.getCurrentWindow() })
@@ -443,7 +423,6 @@ export default class App extends Component {
       paletteMode,
       palettes,
       loadedTitle,
-      docsMode,
       confirmPrompt
     } = this.state
     if (windowId === 1) {
@@ -468,18 +447,8 @@ export default class App extends Component {
           />
         )
       }
-      if (docsMode) {
-        return <Documentation height={HEIGHT} exitDocs={this.exitDocs} />
-      }
       return [
-        <div
-          key="main"
-          className="Main"
-          style={{
-            height: HEIGHT,
-            width: mainWidth
-          }}
-        >
+        <div key="main" className="Main" style={{ height: HEIGHT, width: mainWidth }}>
           <ColorPicker
             mainMenu={mainMenu}
             h={h}
