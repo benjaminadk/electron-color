@@ -5,6 +5,10 @@ import icons from 'common/icons'
 
 let mainWin
 
+const gotLock = app.requestSingleInstanceLock()
+if (gotLock) {
+}
+
 const inDev = process.env.NODE_ENV === 'development'
 
 function createMainWindow() {

@@ -2,7 +2,7 @@
 
 An Electron application targeted to Windows
 
-![main-screen](https://s3-us-west-1.amazonaws.com/benjaminadk/color-picker-2.PNG)
+![main-screen](https://s3-us-west-1.amazonaws.com/benjaminadk/cp-demo-1.gif)
 
 ### Features
 
