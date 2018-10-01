@@ -1,6 +1,8 @@
-## Color Tool
+# Color Tool
 
 An Electron application targeted to Windows
+
+[![Github All Releases](https://img.shields.io/github/downloads/benjaminadk/electron-color/total.svg)](https://github.com/benjaminadk/electron-color/releases)
 
 ![main-screen](https://s3-us-west-1.amazonaws.com/benjaminadk/cp-demo-2.gif)
 
