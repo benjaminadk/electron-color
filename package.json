@@ -2,13 +2,13 @@
   "name": "electron-color",
   "version": "1.0.0",
   "description": "An HSL color picker and eye dropper application",
+  "repository": "https://github.com/benjaminadk/electron-color",
   "main": "./dist/main/main.js",
   "scripts": {
     "dev": "electron-webpack dev",
     "prod": "electron ./dist/main/main.js",
     "compile": "electron-webpack",
-    "dist": "electron-builder",
-    "dist:log": "SET DEBUG=electron-builder && electron-builder"
+    "dist": "electron-builder"
   },
   "keywords": [],
   "author": "benjaminadk",
@@ -17,6 +17,9 @@
     "appId": "com.electron.hslpicker",
     "productName": "Color Tool",
     "win": {
+      "publish": {
+        "provider": "github"
+      },
       "icon": "static/picker-icon.ico",
       "target": [
         "nsis"
