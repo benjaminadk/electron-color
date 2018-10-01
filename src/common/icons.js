@@ -28,6 +28,8 @@ const HELP_ICON = path.join(__static, '/help.png')
 
 const ADD_ICON = path.join(__static, '/add.png')
 
+const INFO_ICON = path.join(__static, '/info.png')
+
 export default {
   MAIN_ICON,
   COMP_ICON,
@@ -42,5 +44,6 @@ export default {
   DELETE_ICON,
   SETTINGS_ICON,
   HELP_ICON,
-  ADD_ICON
+  ADD_ICON,
+  INFO_ICON
 }
