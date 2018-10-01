@@ -19,3 +19,5 @@
 ### Electron Bugs
 
 - dynamic sizing of BrowserWindow different in development and production
+
+### Appveyer Notes
