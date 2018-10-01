@@ -8,7 +8,7 @@
     "dev": "electron-webpack dev",
     "prod": "electron ./dist/main/main.js",
     "compile": "electron-webpack",
-    "dist": "SET GH_TOKEN=664ada30841ce515701576d868fb683a8abf92cc && electron-builder -p onTagOrDraft"
+    "dist": "electron-builder -p onTagOrDraft"
   },
   "keywords": [],
   "author": "benjaminadk",
