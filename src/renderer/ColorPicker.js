@@ -13,7 +13,6 @@ import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from './utils/copyToClipboard'
 import toHSLString from './utils/toHSLString'
 import icons from 'common/icons'
-import tooltips from 'common/tooltips'
 
 const BAR_HEIGHT = 16
 const BAR_WIDTH = 360
@@ -358,6 +357,7 @@ class ColorPicker extends Component {
           />
         </div>
         <MainActions
+          helpers={helpers}
           addNewColor={this.addNewColor}
           enterOptions={enterOptions}
           enterPalettes={enterPalettes}

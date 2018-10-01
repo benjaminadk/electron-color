@@ -8,7 +8,6 @@ export default function({ colors, handleContextMenu, handleSwatchClick }) {
           <div
             key={`color-${i}`}
             className="outerSwatch"
-            title={c.clean ? 'none' : c.color}
             onClick={() => handleSwatchClick(c.clean ? 'none' : c)}
             onContextMenu={e => handleContextMenu(e, c, i)}
           >

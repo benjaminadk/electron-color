@@ -173,7 +173,7 @@ export default class App extends Component {
       frame: false,
       transparent: true,
       alwaysOnTop: true,
-      icon: MAIN_ICON
+      icon: icons.MAIN_ICON
     })
     //dropperWin.webContents.openDevTools({ mode: 'bottom' })
     dropperWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
