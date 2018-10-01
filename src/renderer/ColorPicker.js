@@ -38,7 +38,8 @@ class ColorPicker extends Component {
       litLeft: 172,
       opa: 100,
       opaLeft: 352,
-      copied: null
+      copied: null,
+      setMenu: false
     }
 
     this.hue = React.createRef()
@@ -77,6 +78,7 @@ class ColorPicker extends Component {
   }
 
   addMenuItem = () => {
+    if (this.state.setMenu) return
     this.props.mainMenu.items[1].submenu.insert(
       0,
       new remote.MenuItem({
@@ -85,6 +87,7 @@ class ColorPicker extends Component {
         icon: icons.ADD_ICON
       })
     )
+    this.setState({ setMenu: true })
   }
 
   createPickerBars = () => {
