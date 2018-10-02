@@ -2,7 +2,7 @@
 
 An Electron application targeted to Windows
 
-[![Github All Releases](https://img.shields.io/github/downloads/benjaminadk/electron-color/total.svg)](https://github.com/benjaminadk/electron-color/releases)
+[![GitHub release](https://img.shields.io/github/release/benjaminadk/electron-color.svg?style=flat-square)](https://github.com/benjaminadk/electron-color/releases) ![Platform](https://img.shields.io/badge/platform-windows-lightgrey.svg) [![Github All Releases](https://img.shields.io/github/downloads/benjaminadk/electron-color/total.svg?style=flat-square)](https://github.com/benjaminadk/electron-color/releases)
 
 ![main-screen](https://s3-us-west-1.amazonaws.com/benjaminadk/cp-demo-2.gif)
 
