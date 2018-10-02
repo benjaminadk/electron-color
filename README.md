@@ -20,6 +20,14 @@ An Electron application targeted to Windows
   - Monochromatic
 - Eye Dropper to select pixel color
 - Optional alpha setting enables HSLA, RGBA & HEXA outputs
+- Automatic Updates
+
+### :blue_book: [Documentation](https://github.com/benjaminadk/electron-color/wiki)
+
+### :zap: [Download](https://github.com/benjaminadk/electron-color/releases)
+
+- All thats needed is the latest `exe` file. Other files are for auto updating, etc
+- Application is not signed at this point, you may receive a warning before installation
 
 ### Todos
 
