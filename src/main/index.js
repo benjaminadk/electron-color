@@ -1,15 +1,16 @@
 import { app, BrowserWindow } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import getMainWinDimens from 'common/getMainWinDimens'
 import { MAIN_HTML_DEV, MAIN_HTML_PROD } from 'common/html'
 import icons from 'common/icons'
 
 let mainWin
 
-const gotLock = app.requestSingleInstanceLock()
-
+const firstInstance = app.requestSingleInstanceLock()
 const inDev = process.env.NODE_ENV === 'development'
 
 function createMainWindow() {
+  autoUpdater.checkForUpdatesAndNotify()
   const [width, height, x, y] = getMainWinDimens()
 
   mainWin = new BrowserWindow({
@@ -21,7 +22,7 @@ function createMainWindow() {
     resizable: false,
     maximizable: false,
     icon: icons.MAIN_ICON,
-    title: 'Color Tool'
+    title: `Color Tool ${app.getVersion()}`
   })
 
   mainWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
@@ -48,6 +49,15 @@ function setupDevtools() {
     .catch(console.log)
 }
 
-app.on('ready', createMainWindow)
-
-app.on('window-all-closed', () => app.quit())
+if (!firstInstance) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWin) {
+      if (mainWin.isMinimized()) mainWin.restore()
+      mainWin.focus()
+    }
+  })
+  app.on('ready', createMainWindow)
+  app.on('window-all-closed', () => app.quit())
+}
