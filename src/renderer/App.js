@@ -105,7 +105,7 @@ export default class App extends Component {
           label: 'Help',
           submenu: [
             { label: 'Documentation', click: () => this.enterDocs(), icon: icons.HELP_ICON },
-            { label: 'About', click: () => {}, icon: icons.INFO_ICON }
+            { label: 'About', click: () => this.enterAbout(), icon: icons.INFO_ICON }
           ]
         }
       ]
@@ -158,6 +158,12 @@ export default class App extends Component {
   initDropper = () => {
     ipcRenderer.once('dropper', (event, color) => {
       color && this.addNewColor(color, 'rgb')
+      mainWin.show()
+    })
+    ipcRenderer.once('analyzer', (event, colors) => {
+      colors.forEach(c => {
+        this.addNewColor(c[0], 'hsl')
+      })
       mainWin.show()
     })
     mainWin.hide()
@@ -313,6 +319,8 @@ export default class App extends Component {
   exitPalettes = () => this.setState({ paletteMode: false })
 
   enterDocs = () => shell.openExternal('https://github.com/benjaminadk/electron-color/wiki')
+
+  enterAbout = () => shell.openExternal('https://github.com/benjaminadk/electron-color')
 
   handleSwatchClick = c => {
     if (c === 'none') return

@@ -3,6 +3,9 @@ import { remote, desktopCapturer } from 'electron'
 import IconBar from './components/Dropper/IconBar'
 import ColorOutput from './components/Dropper/ColorOutput'
 import CanvasStack from './components/Dropper/CanvasStack'
+import rgbToHsl from 'rgb-to-hsl'
+import toHSLString from './utils/toHSLString'
+import toHSLParts from './utils/toHSLParts'
 
 const VIDEO_CSS = 'position:absolute;top:-10000px;left:-10000px;'
 const CANVAS_WIDTH = 100
@@ -88,6 +91,38 @@ export default class Dropper extends Component {
         })
         .catch(console.log)
     })
+  }
+
+  analyzePixels = () => {
+    var arr = []
+    var obj = {}
+    var hsl, hsl2, str
+    let p = this.ctx0.getImageData(0, 0, this.c0.width, this.c0.height).data
+    for (let i = 0; i < p.length; i += 4) {
+      hsl = rgbToHsl(p[i], p[i + 1], p[i + 2])
+      hsl2 = `hsl(${parseInt(hsl[0], 10)}, ${parseInt(hsl[1], 10)},${parseInt(hsl[2], 10)})`
+      var [bool, h, s, l, a] = toHSLParts(hsl2)
+      if (s > 25 && l > 25 && l < 90) {
+        str = toHSLString(
+          false,
+          Math.round(h / 5) * 5,
+          Math.round(s / 10) * 10,
+          Math.round(l / 10) * 10
+        )
+        arr.push(str)
+      }
+    }
+    arr.forEach(a => {
+      if (obj[a]) obj[a]++
+      else obj[a] = 1
+    })
+    var sortable = []
+    for (var color in obj) {
+      sortable.push([color, obj[color]])
+    }
+    var top = sortable.sort((a, b) => b[1] - a[1]).slice(0, 8)
+    remote.BrowserWindow.fromId(1).webContents.send('analyzer', top)
+    remote.getCurrentWindow().close()
   }
 
   drawGrid = () => {
@@ -259,7 +294,12 @@ export default class Dropper extends Component {
         onMouseMove={this.handleMouseMoveMain}
       >
         <div className="drop-window">
-          <IconBar selectColor={this.selectColor} refresh={this.refresh} exit={this.exit} />
+          <IconBar
+            selectColor={this.selectColor}
+            refresh={this.refresh}
+            analyzePixels={this.analyzePixels}
+            exit={this.exit}
+          />
           <CanvasStack
             c1Ref={this.c1}
             c2Ref={this.c2}

@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import RefreshIcon from '@material-ui/icons/Autorenew'
 import CancelIcon from '@material-ui/icons/Cancel'
+import GradientIcon from '@material-ui/icons/Gradient'
 
 const styles = theme => ({
   iconButton: {
@@ -18,28 +19,19 @@ const styles = theme => ({
   }
 })
 
-function IconBar({ selectColor, refresh, exit, classes }) {
+function IconBar({ selectColor, refresh, analyzePixels, exit, classes }) {
   return (
     <div className="drop-controls">
-      <IconButton
-        classes={{ root: classes.iconButton }}
-        disableRipple
-        onClick={selectColor}
-      >
+      <IconButton classes={{ root: classes.iconButton }} disableRipple onClick={selectColor}>
         <CheckIcon fontSize="inherit" />
       </IconButton>
-      <IconButton
-        classes={{ root: classes.iconButton }}
-        disableRipple
-        onClick={refresh}
-      >
+      <IconButton classes={{ root: classes.iconButton }} disableRipple onClick={refresh}>
         <RefreshIcon fontSize="inherit" />
       </IconButton>
-      <IconButton
-        classes={{ root: classes.iconButton }}
-        disableRipple
-        onClick={exit}
-      >
+      <IconButton classes={{ root: classes.iconButton }} disableRipple onClick={analyzePixels}>
+        <GradientIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton classes={{ root: classes.iconButton }} disableRipple onClick={exit}>
         <CancelIcon fontSize="inherit" />
       </IconButton>
     </div>
