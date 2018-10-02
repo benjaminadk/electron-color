@@ -285,7 +285,7 @@ export default class Dropper extends Component {
       height,
       options: { outlineColor }
     } = this.props
-    const { color, boxIndex } = this.state
+    const { loading, color, boxIndex } = this.state
     return (
       <div
         style={{ width, height }}
@@ -293,7 +293,7 @@ export default class Dropper extends Component {
         onClick={this.handleClickMain}
         onMouseMove={this.handleMouseMoveMain}
       >
-        <div className="drop-window">
+        <div className="drop-window" style={{ opacity: loading ? 0 : 1 }}>
           <IconBar
             selectColor={this.selectColor}
             refresh={this.refresh}

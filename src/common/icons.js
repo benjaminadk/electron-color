@@ -1,6 +1,6 @@
 import path from 'path'
 
-const MAIN_ICON = path.join(__static, '/picker-icon-1.ico')
+const MAIN_ICON = path.join(__static, '/picker-icon-3.ico')
 
 const COMP_ICON = path.join(__static, '/comp-icon-16.png')
 

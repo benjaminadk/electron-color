@@ -105,7 +105,8 @@ export default class App extends Component {
           label: 'Help',
           submenu: [
             { label: 'Documentation', click: () => this.enterDocs(), icon: icons.HELP_ICON },
-            { label: 'About', click: () => this.enterAbout(), icon: icons.INFO_ICON }
+            { label: 'About', click: () => this.enterAbout(), icon: icons.INFO_ICON },
+            { label: `Version ${remote.app.getVersion()}` }
           ]
         }
       ]
