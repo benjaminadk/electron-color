@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import CheckIcon from '@material-ui/icons/CheckCircle'
 import RefreshIcon from '@material-ui/icons/Autorenew'
 import CancelIcon from '@material-ui/icons/Cancel'
-import GradientIcon from '@material-ui/icons/Gradient'
+import GradientIcon from '@material-ui/icons/ImageSearch'
 
 const styles = theme => ({
   iconButton: {

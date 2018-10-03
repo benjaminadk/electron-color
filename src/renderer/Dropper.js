@@ -105,9 +105,9 @@ export default class Dropper extends Component {
       if (s > 25 && l > 25 && l < 90) {
         str = toHSLString(
           false,
-          Math.round(h / 5) * 5,
-          Math.round(s / 10) * 10,
-          Math.round(l / 10) * 10
+          Math.round(h / 2) * 2,
+          Math.round(s / 5) * 5,
+          Math.round(l / 5) * 5
         )
         arr.push(str)
       }

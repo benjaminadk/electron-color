@@ -45,7 +45,8 @@ export default class App extends Component {
       paletteMode: false,
       palettes: null,
       loadedTitle: '',
-      confirmPrompt: false
+      confirmPrompt: false,
+      errorColors: false
     }
   }
 
@@ -105,8 +106,7 @@ export default class App extends Component {
           label: 'Help',
           submenu: [
             { label: 'Documentation', click: () => this.enterDocs(), icon: icons.HELP_ICON },
-            { label: 'About', click: () => this.enterAbout(), icon: icons.INFO_ICON },
-            { label: `Version ${remote.app.getVersion()}` }
+            { label: 'About', click: () => this.enterAbout(), icon: icons.INFO_ICON }
           ]
         }
       ]
@@ -117,7 +117,7 @@ export default class App extends Component {
 
   initSavedColors = () => {
     fs.readFile(COLORS_PATH, (error, data) => {
-      if (error) throw error
+      if (error) this.handleErrorColors()
       if (!data.length) {
         this.overwriteColors()
       } else {
@@ -209,7 +209,7 @@ export default class App extends Component {
     this.handleSwatchClick(newColor)
     this.setState({ colors })
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
+      if (error) this.handleErrorColors()
     })
   }
 
@@ -219,7 +219,7 @@ export default class App extends Component {
     newColors.push({ color: 'transparent', clean: true })
     this.setState({ colors: newColors })
     fs.writeFile(COLORS_PATH, JSON.stringify(newColors), error => {
-      if (error) throw error
+      if (error) this.handleErrorColors()
     })
   }
 
@@ -235,9 +235,16 @@ export default class App extends Component {
     }
     this.setState({ colors })
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
+      if (error) this.handleErrorColors()
     })
   }
+
+  handleErrorColors = () => {
+    this.resetSavedColors()
+    this.setState({ errorColors: true })
+  }
+
+  closeErrorColors = () => this.setState({ errorColors: false })
 
   enterOptions = () =>
     this.setState({
@@ -370,7 +377,7 @@ export default class App extends Component {
     this.setState({ colors })
     this.handleSwatchClick(c)
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
+      if (error) this.handleErrorColors()
     })
   }
 
@@ -414,7 +421,7 @@ export default class App extends Component {
     this.setState({ colors })
     this.handleSwatchClick(c)
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) throw error
+      if (error) this.handleErrorColors()
     })
   }
 
@@ -432,7 +439,8 @@ export default class App extends Component {
       paletteMode,
       palettes,
       loadedTitle,
-      confirmPrompt
+      confirmPrompt,
+      errorColors
     } = this.state
     if (windowId === 1) {
       if (optionsMode) {
@@ -491,6 +499,14 @@ export default class App extends Component {
           message="Delete All Colors From Palette?"
           onOkay={this.resetSavedColors}
           onClose={this.closeConfirmPrompt}
+        />,
+        <ConfirmPrompt
+          key="fs-error"
+          open={errorColors}
+          title="File System Error"
+          message="Palette color values will be reset"
+          onOkay={this.closeErrorColors}
+          onClose={this.closeErrorColors}
         />
       ]
     } else {

@@ -343,6 +343,7 @@ class ColorPicker extends Component {
               <StatOutput
                 copied={copied}
                 alpha={alpha}
+                helpers={helpers}
                 hsl={hsl}
                 hsla={hsla}
                 rgb={rgb}

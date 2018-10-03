@@ -20,6 +20,7 @@ An Electron application targeted to Windows
   - Analogous
   - Monochromatic
 - Eye Dropper to select pixel color
+- Analyzer to collect 8 most common colors on any screen
 - Optional alpha setting enables HSLA, RGBA & HEXA outputs
 - Automatic Updates
 
@@ -35,7 +36,6 @@ An Electron application targeted to Windows
 - [ ] Add compact option
 - [ ] Add simple one click dropper option
 - [ ] Handle `fs` errors
-- [ ] UI for full palette
 - [ ] Build Help Wiki
 - [ ] Helper Tooltips for all components
 - [ ] Add global shortcut keys

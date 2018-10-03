@@ -27,7 +27,7 @@ function createMainWindow() {
 
   mainWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)
 
-  setupDevtools()
+  inDev && setupDevtools()
 
   mainWin.setMenu(null)
 
@@ -37,7 +37,6 @@ function createMainWindow() {
 }
 
 function setupDevtools() {
-  if (!inDev) return
   const {
     default: installExtension,
     REACT_DEVELOPER_TOOLS
