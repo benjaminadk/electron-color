@@ -46,7 +46,8 @@ export default class App extends Component {
       palettes: null,
       loadedTitle: '',
       confirmPrompt: false,
-      errorColors: false
+      errorPrompt: false,
+      errorMessage: ''
     }
   }
 
@@ -117,7 +118,7 @@ export default class App extends Component {
 
   initSavedColors = () => {
     fs.readFile(COLORS_PATH, (error, data) => {
-      if (error) this.handleErrorColors()
+      if (error) this.handleErrorPrompt('colors')
       if (!data.length) {
         this.overwriteColors()
       } else {
@@ -130,7 +131,7 @@ export default class App extends Component {
   initOptions = () => {
     var options
     fs.readFile(OPTIONS_PATH, (error, data) => {
-      if (error) throw error
+      if (error) this.handleErrorPrompt('options')
       if (!data.length) {
         return
       } else {
@@ -144,7 +145,7 @@ export default class App extends Component {
   initPalettes = () => {
     var palettes
     fs.readFile(PALETTES_PATH, (error, data) => {
-      if (error) throw error
+      if (error) this.handleErrorPrompt('palettes')
       if (!data.length) {
         palettes = []
         this.setState({ palettes })
@@ -209,7 +210,7 @@ export default class App extends Component {
     this.handleSwatchClick(newColor)
     this.setState({ colors })
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) this.handleErrorColors()
+      if (error) this.handleErrorPrompt('colors')
     })
   }
 
@@ -219,7 +220,7 @@ export default class App extends Component {
     newColors.push({ color: 'transparent', clean: true })
     this.setState({ colors: newColors })
     fs.writeFile(COLORS_PATH, JSON.stringify(newColors), error => {
-      if (error) this.handleErrorColors()
+      if (error) this.handleErrorPrompt('colors')
     })
   }
 
@@ -235,16 +236,26 @@ export default class App extends Component {
     }
     this.setState({ colors })
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) this.handleErrorColors()
+      if (error) this.handleErrorPrompt('colors')
     })
   }
 
-  handleErrorColors = () => {
-    this.resetSavedColors()
-    this.setState({ errorColors: true })
+  handleErrorPrompt = type => {
+    var errorMessage
+    if (type === 'colors') {
+      this.resetSavedColors()
+      errorMessage = 'Saved Colors will be reset'
+    } else if (type === 'options') {
+      this.resetOptions()
+      errorMessage = 'Options values will be reset'
+    } else if (type === 'palettes') {
+      this.resetPalettes()
+      errorMessage = 'Save Palettes will be reset'
+    }
+    this.setState({ errorPrompt: true, errorMessage })
   }
 
-  closeErrorColors = () => this.setState({ errorColors: false })
+  closeErrorPrompt = () => this.setState({ errorPrompt: false, errorMessage: '' })
 
   enterOptions = () =>
     this.setState({
@@ -255,7 +266,15 @@ export default class App extends Component {
   saveOptions = options => {
     this.setState({ options })
     fs.writeFile(OPTIONS_PATH, JSON.stringify(options), error => {
-      if (error) throw error
+      if (error) this.handleErrorPrompt('options')
+    })
+  }
+
+  resetOptions = () => {
+    const options = { alpha: false, pinned: false, helpers: false, outlineColor: '#FF0000' }
+    this.setState({ options })
+    fs.writeFile(OPTIONS_PATH, JSON.stringify(options), error => {
+      if (error) this.handleErrorPrompt('options')
     })
   }
 
@@ -268,11 +287,7 @@ export default class App extends Component {
 
   closeConfirmPrompt = () => this.setState({ confirmPrompt: false })
 
-  enterPalettes = () =>
-    this.setState({
-      paletteMode: true,
-      optionsMode: false
-    })
+  enterPalettes = () => this.setState({ paletteMode: true, optionsMode: false })
 
   openPalettePrompt = () => {
     const { colors, optionsMode, paletteMode } = this.state
@@ -293,7 +308,7 @@ export default class App extends Component {
     }
     this.setState({ palettes })
     fs.writeFile(PALETTES_PATH, JSON.stringify(palettes), error => {
-      if (error) throw error
+      if (error) this.handleErrorPrompt('palettes')
     })
   }
 
@@ -302,7 +317,7 @@ export default class App extends Component {
     palettes[i].colors = colors
     this.setState({ palettes })
     fs.writeFile(PALETTES_PATH, JSON.stringify(palettes), error => {
-      if (error) throw error
+      if (error) this.handleErrorPrompt('palettes')
     })
   }
 
@@ -320,7 +335,15 @@ export default class App extends Component {
     let newPalettes = palettes.filter((p, index) => i !== index)
     this.setState({ palettes: newPalettes })
     fs.writeFile(PALETTES_PATH, JSON.stringify(newPalettes), error => {
-      if (error) throw error
+      if (error) this.handleErrorPrompt('palettes')
+    })
+  }
+
+  resetPalettes = () => {
+    const palettes = []
+    this.setState({ palettes })
+    fs.writeFile(PALETTES_PATH, JSON.stringify(palettes), error => {
+      if (error) this.handleErrorPrompt('palettes')
     })
   }
 
@@ -377,7 +400,7 @@ export default class App extends Component {
     this.setState({ colors })
     this.handleSwatchClick(c)
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) this.handleErrorColors()
+      if (error) this.handleErrorPrompt('colors')
     })
   }
 
@@ -421,7 +444,7 @@ export default class App extends Component {
     this.setState({ colors })
     this.handleSwatchClick(c)
     fs.writeFile(COLORS_PATH, JSON.stringify(colors), error => {
-      if (error) this.handleErrorColors()
+      if (error) this.handleErrorPrompt('colors')
     })
   }
 
@@ -440,7 +463,8 @@ export default class App extends Component {
       palettes,
       loadedTitle,
       confirmPrompt,
-      errorColors
+      errorPrompt,
+      errorMessage
     } = this.state
     if (windowId === 1) {
       if (optionsMode) {
@@ -502,11 +526,11 @@ export default class App extends Component {
         />,
         <ConfirmPrompt
           key="fs-error"
-          open={errorColors}
+          open={errorPrompt}
           title="File System Error"
-          message="Palette color values will be reset"
-          onOkay={this.closeErrorColors}
-          onClose={this.closeErrorColors}
+          message={errorMessage}
+          onOkay={this.closeErrorPrompt}
+          onClose={this.closeErrorPrompt}
         />
       ]
     } else {
