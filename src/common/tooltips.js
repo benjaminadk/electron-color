@@ -44,6 +44,30 @@ const DOCUMENTATION = {
     'Click to open the documentation window. This provides a detailed explanation of application features.'
 }
 
+export const COLOR_GRID = {
+  title: 'Saved Color Palette',
+  message:
+    'Holds up to 64 colors. Right click an individual tile to access the Color Generators Menu. These actions will generate more colors based on color theory mathematics. Tiles can also be deleted from this menu.'
+}
+
+export const STAT_OUTPUT = {
+  title: 'Color Stats Output',
+  message:
+    'Under the hood Color Tool calculates HSL, RGB and HEX color values.  Click the icon on the right to copy a value to the clipboard, then paste elsewhere as needed. If the Alpha option is set, output formats will be HSLA, RGBA and HEXA.'
+}
+
+export const STAT_INPUT = {
+  title: 'Color Stats Input',
+  message:
+    'Manually enter values for Hue, Saturation, Lightness and optional Alpha. Input is automatically restricted to accepted values. Use the arrow buttons for fine grained control over each value.'
+}
+
+export const COLOR_BAR = {
+  title: 'Color Bars',
+  message:
+    'Represent the Hue, Saturation, Lightness and optional Alpha value of a color. Simple click the bar or drag the handle left or right to adjust the values. Notice when the Hue is adjusted the other bars change color.'
+}
+
 export default {
   SAVE_COLOR,
   DROPPER,

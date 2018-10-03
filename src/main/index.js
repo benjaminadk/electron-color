@@ -22,7 +22,7 @@ function createMainWindow() {
     resizable: false,
     maximizable: false,
     icon: icons.MAIN_ICON,
-    title: `Color Tool`
+    title: `Color Tool ${app.getVersion()}`
   })
 
   mainWin.loadURL(inDev ? MAIN_HTML_DEV : MAIN_HTML_PROD)

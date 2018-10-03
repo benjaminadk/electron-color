@@ -33,9 +33,8 @@ An Electron application targeted to Windows
 
 ### Todos
 
-- [ ] Add compact option
 - [ ] Add simple one click dropper option
-- [ ] Handle `fs` errors
+- [x] Handle `fs` errors
 - [ ] Build Help Wiki
 - [ ] Helper Tooltips for all components
 - [ ] Add global shortcut keys

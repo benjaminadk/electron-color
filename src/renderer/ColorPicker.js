@@ -8,6 +8,8 @@ import MainSwatch from './components/ColorPicker/MainSwatch'
 import StatOutput from './components/ColorPicker/StatOutput'
 import ColorGrid from './components/ColorPicker/ColorGrid'
 import MainActions from './components/ColorPicker/MainActions'
+import Helper from './components/App/Helper'
+import { COLOR_BAR, STAT_INPUT } from 'common/tooltips'
 import HSLtoRGBorHEX from './utils/HSLtoRGBorHEX'
 import HSLAtoRGBAorHEXA from './utils/HSLAtoRGBAorHEXA'
 import copyToClipboard from './utils/copyToClipboard'
@@ -291,53 +293,74 @@ class ColorPicker extends Component {
       <div className="ColorPicker">
         <div className="cp-upper">
           <div>
-            <ColorBar barRef={this.hue} thumbRef={this.hueThumb} helpers={helpers} left={hueLeft} />
-            <ColorBar barRef={this.sat} thumbRef={this.satThumb} helpers={helpers} left={satLeft} />
-            <ColorBar barRef={this.lit} thumbRef={this.litThumb} helpers={helpers} left={litLeft} />
-            <Collapse in={alpha} classes={{ entered: classes.collapse }}>
+            <Helper tooltip={COLOR_BAR} placement="bottom" helpers={helpers}>
               <div>
                 <ColorBar
-                  barRef={this.opa}
-                  thumbRef={this.opaThumb}
+                  barRef={this.hue}
+                  thumbRef={this.hueThumb}
                   helpers={helpers}
-                  left={opaLeft}
+                  left={hueLeft}
+                />
+                <ColorBar
+                  barRef={this.sat}
+                  thumbRef={this.satThumb}
+                  helpers={helpers}
+                  left={satLeft}
+                />
+                <ColorBar
+                  barRef={this.lit}
+                  thumbRef={this.litThumb}
+                  helpers={helpers}
+                  left={litLeft}
+                />
+                <Collapse in={alpha} classes={{ entered: classes.collapse }}>
+                  <div>
+                    <ColorBar
+                      barRef={this.opa}
+                      thumbRef={this.opaThumb}
+                      helpers={helpers}
+                      left={opaLeft}
+                    />
+                  </div>
+                </Collapse>
+              </div>
+            </Helper>
+            <Helper tooltip={STAT_INPUT} placement="top" helpers={helpers}>
+              <div className="stats" style={{ marginTop: 10 }}>
+                <StatInput
+                  type="hue"
+                  value={hue}
+                  onChange={this.onChange}
+                  onClick={this.handleArrowClick}
+                  before="H"
+                  after="&deg;"
+                />
+                <StatInput
+                  type="sat"
+                  value={sat}
+                  onChange={this.onChange}
+                  onClick={this.handleArrowClick}
+                  before="S"
+                  after="%"
+                />
+                <StatInput
+                  type="lit"
+                  value={lit}
+                  onChange={this.onChange}
+                  onClick={this.handleArrowClick}
+                  before="L"
+                  after="%"
+                />
+                <StatInput
+                  type="opa"
+                  value={opa}
+                  onChange={this.onChange}
+                  onClick={this.handleArrowClick}
+                  before="A"
+                  after="%"
                 />
               </div>
-            </Collapse>
-            <div className="stats" style={{ marginTop: 10 }}>
-              <StatInput
-                type="hue"
-                value={hue}
-                onChange={this.onChange}
-                onClick={this.handleArrowClick}
-                before="H"
-                after="&deg;"
-              />
-              <StatInput
-                type="sat"
-                value={sat}
-                onChange={this.onChange}
-                onClick={this.handleArrowClick}
-                before="S"
-                after="%"
-              />
-              <StatInput
-                type="lit"
-                value={lit}
-                onChange={this.onChange}
-                onClick={this.handleArrowClick}
-                before="L"
-                after="%"
-              />
-              <StatInput
-                type="opa"
-                value={opa}
-                onChange={this.onChange}
-                onClick={this.handleArrowClick}
-                before="A"
-                after="%"
-              />
-            </div>
+            </Helper>
             <div className="output">
               <MainSwatch alpha={alpha} hsl={hsl} hsla={hsla} />
               <StatOutput
@@ -356,6 +379,7 @@ class ColorPicker extends Component {
           </div>
           <ColorGrid
             colors={colors}
+            helpers={helpers}
             handleContextMenu={handleContextMenu}
             handleSwatchClick={handleSwatchClick}
           />

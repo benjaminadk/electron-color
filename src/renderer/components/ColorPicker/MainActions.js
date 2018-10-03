@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
+import Helper from '../App/Helper'
 import SettingsIcon from '@material-ui/icons/Settings'
 import AddIcon from '@material-ui/icons/Add'
 import PaletteIcon from '@material-ui/icons/Palette'
@@ -15,19 +14,6 @@ import tooltips from 'common/tooltips'
 const styles = theme => ({
   button: {
     marginLeft: theme.spacing.unit
-  },
-  popper: {
-    opacity: 1
-  },
-  tooltip: {
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.common.black}`,
-    borderRadius: 0,
-    color: theme.palette.common.black
-  },
-  caption: {
-    fontSize: '.7rem',
-    lineHeight: '1.25em'
   }
 })
 
@@ -62,36 +48,11 @@ class MainActions extends Component {
     return (
       <div className="actions">
         {buttons.map((b, i) => (
-          <Tooltip
-            key={b.text}
-            enterDelay={1000}
-            leaveDelay={250}
-            placement="top"
-            TransitionProps={{ timeout: 250 }}
-            classes={{ popper: classes.popper, tooltip: classes.tooltip }}
-            title={
-              helpers ? (
-                <div>
-                  <Typography variant="body1" color="inherit">
-                    {tooltips[b.text].title}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    color="inherit"
-                    classes={{ caption: classes.caption }}
-                  >
-                    {tooltips[b.text].message}
-                  </Typography>
-                </div>
-              ) : (
-                ''
-              )
-            }
-          >
+          <Helper key={b.text} placement="top" tooltip={tooltips[b.text]} helpers={helpers}>
             <Button onClick={b.click} classes={{ root: classes.button }}>
               {b.icon}
             </Button>
-          </Tooltip>
+          </Helper>
         ))}
       </div>
     )

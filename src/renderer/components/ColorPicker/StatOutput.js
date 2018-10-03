@@ -1,16 +1,11 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
+import Helper from '../App/Helper'
 import IconButton from '@material-ui/core/IconButton'
 import CopyIcon from '@material-ui/icons/FileCopySharp'
+import { STAT_OUTPUT } from 'common/tooltips'
 
 const msg = 'Copied To Clipboard'
-const tooltip = {
-  title: 'Color Stats Output',
-  message:
-    'Under the hood Color Tool calculates HSL, RGB and HEX color values.  Click the icon on the right to copy a value to the clipboard, then paste elsewhere as needed. If the Alpha option is set, output formats will be HSLA, RGBA and HEXA'
-}
 
 const styles = theme => ({
   iconButton: {
@@ -22,19 +17,6 @@ const styles = theme => ({
     '&:hover': {
       background: 'transparent'
     }
-  },
-  popper: {
-    opacity: 1
-  },
-  tooltip: {
-    backgroundColor: theme.palette.background.default,
-    border: `1px solid ${theme.palette.common.black}`,
-    borderRadius: 0,
-    color: theme.palette.common.black
-  },
-  caption: {
-    fontSize: '.7rem',
-    lineHeight: '1.25em'
   }
 })
 
@@ -52,27 +34,7 @@ function StatOutput({
   classes
 }) {
   return (
-    <Tooltip
-      enterDelay={1000}
-      leaveDelay={250}
-      placement="top"
-      TransitionProps={{ timeout: 250 }}
-      classes={{ popper: classes.popper, tooltip: classes.tooltip }}
-      title={
-        helpers ? (
-          <div>
-            <Typography variant="body1" color="inherit">
-              {tooltip.title}
-            </Typography>
-            <Typography variant="caption" color="inherit" classes={{ caption: classes.caption }}>
-              {tooltip.message}
-            </Typography>
-          </div>
-        ) : (
-          ''
-        )
-      }
-    >
+    <Helper placement="top" tooltip={STAT_OUTPUT} helpers={helpers}>
       <div className="formats">
         <div>
           <input
@@ -120,7 +82,7 @@ function StatOutput({
           </IconButton>
         </div>
       </div>
-    </Tooltip>
+    </Helper>
   )
 }
 

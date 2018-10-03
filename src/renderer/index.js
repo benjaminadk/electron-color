@@ -29,6 +29,11 @@ const createTheme = () => {
         },
         disableBackdropClick: true,
         disableEscapeKeyDown: true
+      },
+      MuiTooltip: {
+        enterDelay: 1000,
+        leaveDelay: 250,
+        TransitionProps: { timeout: 250 }
       }
     },
     overrides: {
@@ -70,6 +75,18 @@ const createTheme = () => {
           justifyContent: 'center',
           marginTop: theme.spacing.unit * 2,
           paddingTop: 10
+        }
+      },
+      MuiTooltip: {
+        popper: {
+          opacity: 1
+        },
+        tooltip: {
+          backgroundColor: theme.palette.grey[100],
+          outline: '2px outset rgb(206, 206, 206)',
+          borderRadius: 0,
+          color: theme.palette.common.black,
+          boxShadow: theme.shadows[10]
         }
       }
     },
