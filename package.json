@@ -17,7 +17,7 @@
     "appId": "com.electron.hslpicker",
     "productName": "Color Tool",
     "win": {
-      "icon": "static/picker-icon-1.ico",
+      "icon": "static/picker-icon-3.ico",
       "publish": {
         "provider": "github",
         "owner": "benjaminadk"

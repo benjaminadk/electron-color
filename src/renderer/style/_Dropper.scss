@@ -1,6 +1,6 @@
 .Dropper {
   overflow: hidden;
-  cursor: crosshair;
+  cursor: var(--crosshair);
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;

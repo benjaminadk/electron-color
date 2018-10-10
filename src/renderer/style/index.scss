@@ -18,6 +18,10 @@ body {
   overflow: hidden;
 }
 
+:root {
+  --crosshair: crosshair;
+}
+
 .Main {
   display: flex;
   align-items: center;

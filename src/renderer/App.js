@@ -28,6 +28,11 @@ var mainWin = remote.BrowserWindow.fromId(1)
 var mainMenu
 var dropperWin
 
+// document.documentElement.style.setProperty(
+//   '--crosshair',
+//   `url('https://s3-us-west-1.amazonaws.com/benjaminadk/cursor.cur') 16 16, crosshair`
+// )
+
 export default class App extends Component {
   constructor(props) {
     super(props)

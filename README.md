@@ -24,6 +24,8 @@ An Electron application targeted to Windows
 - Optional alpha setting enables HSLA, RGBA & HEXA outputs
 - Automatic Updates
 
+![analyzer](https://s3-us-west-1.amazonaws.com/benjaminadk/cp-demo-3.gif)
+
 ### :blue_book: [Documentation](https://github.com/benjaminadk/electron-color/wiki)
 
 ### :zap: [Download](https://github.com/benjaminadk/electron-color/releases)
