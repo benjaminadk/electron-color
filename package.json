@@ -1,6 +1,6 @@
 {
   "name": "electron-color",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An HSL color picker and eye dropper application",
   "repository": "https://github.com/benjaminadk/electron-color",
   "main": "./dist/main/main.js",
