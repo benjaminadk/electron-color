@@ -20,9 +20,18 @@ An Electron application targeted to Windows
   - Analogous
   - Monochromatic
 - Eye Dropper to select pixel color
-- Analyzer to collect 8 most common colors on any screen
 - Optional alpha setting enables HSLA, RGBA & HEXA outputs
 - Automatic Updates
+
+### Donate
+
+- Color Tool is 100% FREE but even small PayPal donations help keep me motivated!
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=H5FBFKUNGF9S2)
+
+### Analyzer
+
+- Analyzer to collect 8 most common colors on any screen
 
 ![analyzer](https://s3-us-west-1.amazonaws.com/benjaminadk/cp-demo-3.gif)
 
