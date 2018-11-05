@@ -7,6 +7,12 @@ An Electron application targeted to Windows
 
 ![main-screen](https://s3-us-west-1.amazonaws.com/benjaminadk/cp-demo-2.gif)
 
+### Donate
+
+- Color Tool is 100% FREE but even small PayPal donations help keep me motivated!
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=H5FBFKUNGF9S2)
+
 ### Features
 
 - HSL Color Picker
@@ -23,12 +29,6 @@ An Electron application targeted to Windows
 - Optional alpha setting enables HSLA, RGBA & HEXA outputs
 - Automatic Updates
 
-### Donate
-
-- Color Tool is 100% FREE but even small PayPal donations help keep me motivated!
-
-[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=H5FBFKUNGF9S2)
-
 ### Analyzer
 
 - Analyzer to collect 8 most common colors on any screen
@@ -41,11 +41,3 @@ An Electron application targeted to Windows
 
 - All thats needed is the latest `exe` file. Other files are for auto updating, etc
 - Application is not signed at this point, you may receive a warning before installation
-
-### Todos
-
-- [ ] Add simple one click dropper option
-- [x] Handle `fs` errors
-- [ ] Build Help Wiki
-- [ ] Helper Tooltips for all components
-- [ ] Add global shortcut keys
